@@ -11,19 +11,18 @@ public enum GeneLengths {
   private GeneLengths(int length) {
     this.length = length;
   }
+
   public int getLength() {
     return length;
   }
 }
 
 public class Individual {
-  public Gene[] chromosome;
+  private Gene[] chromosome;
   private RegularGon phenotype;
   private float fitness;
-
   public Individual(Boolean randInd) {
-    chromosome = new Gene[6];
-    //0 = radius 0-63, 1 = numSides 0-31, 2 = spinRate -7-8, 3 = red, 4 = green, 5 = blue
+    chromosome = new Gene[chromosomeLength];
     chromosome[0] = new Gene(GeneLengths.RADIUS.getLength());
     chromosome[1] = new Gene(GeneLengths.NUM_SIDES.getLength());
     chromosome[2] = new Gene(GeneLengths.SPIN_RATE.getLength());
@@ -38,7 +37,7 @@ public class Individual {
     this(false);
   }
 
-  public Individual mate(Individual partner) {
+  public Individual crossover(Individual partner) {
     Individual child = new Individual(false);
     for (int i = 0; i < chromosome.length; i++) {
       if (random(1) < 0.5) child.chromosome[i] = new Gene(chromosome[i]);
@@ -66,6 +65,10 @@ public class Individual {
 
   public float getFitness() {
     return fitness;
+  }
+  
+  public Gene[] getChromosome(){
+    return chromosome;
   }
 
   private void setPhenotype() {
