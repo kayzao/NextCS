@@ -2,8 +2,9 @@ int POP_COLS = 6;
 int POP_ROWS = 5;
 int OFFSET = 1;
 int POP_SIZE = POP_COLS * POP_ROWS;
-int chromosomeLength = 6;
-int GRID_SIZE = int(pow(2, chromosomeLength + 1) - 1);
+int CHROMOSOME_LENGTH = 6;
+int GRID_SIZE = int(pow(2, CHROMOSOME_LENGTH + 1) - 1);
+int MUTATION_RATE = 0.03;
 
 Population pop;
 
@@ -12,7 +13,7 @@ void settings() {
 }
 
 void setup() {
-  pop = new Population(POP_SIZE);
+  pop = new Population(POP_SIZE, MUTATION_RATE);
   makePopulation();
 }
 

@@ -61,6 +61,16 @@ public class Individual {
     }
     newFitness = (float)numSame / total;
     fitness = newFitness;
+    /*
+    //new plan: update fitness based on how close each value is
+    float newFitness = 0.0;
+    for (int i = 0; i < chromosome.length; i++){
+      //diff is the difference in value between the two genes
+      float diff = abs(float(chromosome[i].getValue()) - float(target.chromosome[i].getValue()));
+      newFitness += (diff / 
+    }
+    newFitness /= float(chromosome.length);
+    */
   }
 
   public float getFitness() {
