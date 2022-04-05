@@ -22,7 +22,7 @@ public class Individual {
   private RegularGon phenotype;
   private float fitness;
   public Individual(Boolean randInd) {
-    chromosome = new Gene[chromosomeLength];
+    chromosome = new Gene[CHROMOSOME_LENGTH];
     chromosome[0] = new Gene(GeneLengths.RADIUS.getLength());
     chromosome[1] = new Gene(GeneLengths.NUM_SIDES.getLength());
     chromosome[2] = new Gene(GeneLengths.SPIN_RATE.getLength());
