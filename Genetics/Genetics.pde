@@ -2,7 +2,7 @@ int POP_COLS = 6, POP_ROWS = 5, OFFSET = 1, POP_SIZE = POP_COLS * POP_ROWS;
 int CHROMOSOME_LENGTH = 6;
 int GRID_SIZE = int(pow(2, CHROMOSOME_LENGTH + 1) - 1);
 int generationCount = 0;
-float MUTATION_RATE = 0.03;
+float MUTATION_RATE = 0.01;
 color bestIndivColor = color(50, 200, 255);
 color targetColor = color(255, 255, 0);
 Population pop;
@@ -17,6 +17,7 @@ void setup() {
 }
 
 void draw() {
+  strokeWeight(1);
   background(255);
   pop.drawPopGrid(POP_COLS, POP_ROWS, GRID_SIZE, OFFSET, true);
   drawGrid();
@@ -31,7 +32,7 @@ void keyPressed() {
     generationCount++;
     pop = pop.evolve();
     pop.setFitness(pop.get(0));
-    println("GENERATION: " + generationCount + "\nBest fitness: " + pop.getBestFitness(), 10 + "\nAverage fitness: " + pop.getAverageFitness(), 10);
+    println("GENERATION: " + generationCount, "\nBest fitness: " + pop.getBestFitness(), "\nAverage fitness: " + pop.getAverageFitness());
   }
 }
 
