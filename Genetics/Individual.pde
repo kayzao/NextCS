@@ -47,8 +47,6 @@ public class Individual {
   }
 
   public void updateFitness(Individual target) {
-    //updates fitness based on how similar it seems to the target
-    //The more similar it is, the higher the fitness
     //PLAN: find the percentage of booleans in each genotype[] of gene in chromosome[] that are the same
     float newFitness = 0.0;
     int numSame = 0;
@@ -61,16 +59,7 @@ public class Individual {
     }
     newFitness = (float)numSame / total;
     fitness = newFitness;
-    /*
-    //new plan: update fitness based on how close each value is
-    float newFitness = 0.0;
-    for (int i = 0; i < chromosome.length; i++){
-      //diff is the difference in value between the two genes
-      float diff = abs(float(chromosome[i].getValue()) - float(target.chromosome[i].getValue()));
-      newFitness += (diff / 
-    }
-    newFitness /= float(chromosome.length);
-    */
+    
   }
 
   public float getFitness() {
