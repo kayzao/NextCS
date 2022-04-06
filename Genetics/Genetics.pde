@@ -18,6 +18,7 @@ void setup() {
 
 void draw() {
   strokeWeight(1);
+  stroke(0);
   background(255);
   pop.drawPopGrid(POP_COLS, POP_ROWS, GRID_SIZE, OFFSET, true);
   drawGrid();
