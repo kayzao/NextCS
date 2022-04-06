@@ -31,7 +31,7 @@ void keyPressed() {
     generationCount++;
     pop = pop.evolve();
     pop.setFitness(pop.get(0));
-    println("GENERATION: " + generationCount + "\nBest fitness: " + nf(pop.getBestFitness(), 10) + "\nAverage fitness: " + nf(pop.getAverageFitness(), 10));
+    println("GENERATION: " + generationCount + "\nBest fitness: " + pop.getBestFitness(), 10 + "\nAverage fitness: " + pop.getAverageFitness(), 10);
   }
 }
 
