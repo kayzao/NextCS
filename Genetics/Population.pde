@@ -55,11 +55,13 @@ class Population{
     stroke(c);
     strokeWeight(5);
     noFill();
-    rect(index % POP_COLS * (GRID_SIZE + OFFSET) , index / POP_COLS * (GRID_SIZE * OFFSET) , GRID_SIZE, GRID_SIZE);
+    rect(index % POP_COLS * (GRID_SIZE + OFFSET) , index / POP_COLS * (GRID_SIZE + OFFSET) , GRID_SIZE, GRID_SIZE);
   }
+
   public void setTarget(Individual indiv){
     set(0, indiv);
   }
+  
   public void set(int index, Individual indiv){
     pop[index] = indiv;
   }
