@@ -1,5 +1,6 @@
 public static final int CHROMOSOME_LENGTH = 100; //first 50 for magnitude, last 50 for angle
 public static final int ACTIONS_LENGTH = 50;
+
 public enum GeneLengths { 
   //magnitude comes in increments of 1/150, up to 0.1
   //angle should be be in increments of (2 * PI)/511, up to 2 PI
@@ -19,7 +20,7 @@ public enum GeneLengths {
 
 public class Individual{
   private Gene[] chromosome;
-  private Rocket rocket;
+  public Rocket rocket;
   private float fitness;
 
   public Individual(boolean random){
@@ -42,9 +43,8 @@ public class Individual{
     return sb.toString();
   }
 
-  public void display(int x, int y, boolean showFitness){
-    rocket.display(x, y);
-    if(showFitness) text(fitness, x, y);
+  public void display(boolean showFitness){
+    rocket.display();
   }
 
   public float getFitness(){
@@ -56,7 +56,14 @@ public class Individual{
   }
 
   public void setRocket(){
-    
+    PVector[] angles = new PVector[ACTIONS_LENGTH];
+    float mags = new float[ACTIONS_LENGTH];
+    for(int i = ACTIONS_LENGTH; i < 2 * ACTIONS_LENGTH; i++){
+      float theta = float(chromosome[i].getValue()) * (2 * PI) / 511.0;
+      angles[i - ACTIONS_LENGTH] = new PVector(cos(theta), sin(theta));
+      mags[i - ACTIONS_LENGTH] = float(chromosome[i - ACTIONS_LENGTH].getValue()) / 150.0;
+    }
+    rocket = new Rocket(angles, mags, ACTIONS_LENGTH);
   }
 
   public void mutate(float rate){
@@ -78,11 +85,3 @@ public class Individual{
     float fitness = 1 / dist(x, y, rocket.getX(), rocket.getY());
   }
 }
-
-//Complete overhaul of individual class
-/* NEEDED:
- * setPhenotype() [calls constructor of rocket to update to the latest values?]
- * updateFitness() [has to change fitness of the individual based on how far away the target is, need a new formula somehow?]
- * crossover() [crossover between two individuals]
- * new constructor, where all the genes are for the angle + magnitude of each action of the rocket.
- */

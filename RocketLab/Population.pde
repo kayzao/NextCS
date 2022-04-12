@@ -59,6 +59,10 @@ class Population{
     pop[index] = indiv;
   }
 
+  public void setup(){
+    for(Individual i : pop) i.setRocket();
+  }
+
   public Individual select(){
     float sumFitness = 0;
     float aimFitness = random(1, totalFitness);
@@ -83,7 +87,7 @@ class Population{
     }
   }
 
-  public Population evolve(){ //not calling this mating season
+  public Population evolve(){ 
     Population newPop = new Population(pop.length, mutationRate);
     int bestInd = getBestIndex();
     newPop.setTarget(pop[0]);

@@ -1,22 +1,23 @@
 int NUM_MOVES = 250;
 int moveCount;
-Rocket r;
+Population pop;
 
 void setup() {
   size(500, 500);
-  r = new Rocket(new PVector(250, 250), NUM_MOVES);
-  r.randomMoves();
+  pop = new Population(5);
+  pop.randomPop();
+  pop.setup();
   moveCount = 0;
 }
-
-void draw() {
-  background(255);
+void draw(){
   if (moveCount < NUM_MOVES) {
-    r.run();
-    r.display();
+    for(Individual i : pop){
+      i.rocket.run();
+      i.rocket.display();
+    }
     moveCount++;
   }
   else {
-    r.display();
+    for(Individual i : pop) i.r.display
   }
 }
