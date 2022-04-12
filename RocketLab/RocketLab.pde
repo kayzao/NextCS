@@ -10,14 +10,15 @@ void setup() {
   moveCount = 0;
 }
 void draw(){
+  background(255);
   if (moveCount < NUM_MOVES) {
-    for(Individual i : pop){
-      i.rocket.run();
-      i.rocket.display();
+    for(int i = 0; i < 5; i++){
+      pop.get(i).rocket.run();
+      pop.get(i).rocket.display();
     }
     moveCount++;
   }
   else {
-    for(Individual i : pop) i.r.display
+    for(int i = 0; i < 5; i++) pop.get(i).rocket.display();
   }
 }

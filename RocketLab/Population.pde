@@ -73,14 +73,6 @@ class Population{
     return pop[pop.length-1];
   }
   
-  public void setFitness(Individual target){
-    totalFitness = 0;                                  
-    for(int i = 0; i < pop.length; i++){
-      pop[i].updateFitness(target);
-      totalFitness += pop[i].getFitness();
-    }
-  }
-  
   public void randomPop() {
     for (int i = 0; i < pop.length; i++) {
       pop[i] = new Individual(true);

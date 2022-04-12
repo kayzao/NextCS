@@ -32,7 +32,7 @@ public class Individual{
     if(random) for(Gene g : chromosome) g.randomize();
   }
   public Individual(){
-    this(false};
+    this(false);
   }
 
   public String toString(){
@@ -57,7 +57,7 @@ public class Individual{
 
   public void setRocket(){
     PVector[] angles = new PVector[ACTIONS_LENGTH];
-    float mags = new float[ACTIONS_LENGTH];
+    float[] mags = new float[ACTIONS_LENGTH];
     for(int i = ACTIONS_LENGTH; i < 2 * ACTIONS_LENGTH; i++){
       float theta = float(chromosome[i].getValue()) * (2 * PI) / 511.0;
       angles[i - ACTIONS_LENGTH] = new PVector(cos(theta), sin(theta));
@@ -74,7 +74,7 @@ public class Individual{
     Individual child = new Individual(false);
     for(int i = 0; i < CHROMOSOME_LENGTH; i++){
       if(random(1) < 0.5) child.chromosome[i] = new Gene(chromosome[i]);
-      else child.chromosome[i] = new Gene(parther.chromosome[i])
+      else child.chromosome[i] = new Gene(partner.chromosome[i]);
     }
     return child;
   }
@@ -82,6 +82,6 @@ public class Individual{
   public void updateFitness(int x, int y){ //update fitness based on the center of the goal
     //update fitness based on distance from x, y.
     //FORMULA: 1/distance
-    float fitness = 1 / dist(x, y, rocket.getX(), rocket.getY());
+    float fitness = 1 / dist(x, y, rocket.position.x, rocket.position.y);
   }
 }
