@@ -77,6 +77,7 @@ class Population{
     for (int i = 0; i < pop.length; i++) {
       pop[i] = new Individual(true);
     }
+    setup();
   }
 
   public Population evolve(){ 

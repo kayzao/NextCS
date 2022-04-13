@@ -1,6 +1,6 @@
 class Rocket {
 
-  static final int START_X = 250;
+  static final int START_X = 50;
   static final int START_Y = 250;
 
   // All of our physics stuff
