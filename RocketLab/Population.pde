@@ -27,7 +27,7 @@ class Population{
   
   public void display(boolean showFitness){
     for(int i = 0; i < pop.length; i++){
-      pop[i].rocket.run();
+      if(!showFitness) pop[i].rocket.run();
       pop[i].display(showFitness);
     }
   }
@@ -95,14 +95,17 @@ class Population{
     Population newPop = new Population(pop.length, mutationRate);
     int bestInd = getBestIndex();
     for(int i = 0; i < pop.length; i++){
+      /*
       if(i == bestInd){
         newPop.set(i, pop[i]);
         continue;
-      } 
+      } */
       Individual parent1 = select();
       Individual parent2 = select();
       Individual child = parent1.crossover(parent2);
       child.mutate(mutationRate);
+      child.rocket.reset();
+      child.setRocket();
       newPop.set(i, child);
     }
     return newPop;

@@ -74,11 +74,12 @@ public class Individual{
   }
 
   public Individual crossover(Individual partner){
-    Individual child = new Individual(false);
+    Individual child = new Individual(true);
     for(int i = 0; i < CHROMOSOME_LENGTH; i++){
       if(random(1) < 0.5) child.chromosome[i] = new Gene(chromosome[i]);
       else child.chromosome[i] = new Gene(partner.chromosome[i]);
     }
+    child.setRocket();
     return child;
   }
 
