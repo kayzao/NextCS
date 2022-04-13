@@ -1,9 +1,9 @@
-int NUM_MOVES = 375;
+int NUM_MOVES = 500;
 int goalX;
 int goalY;
 int goalSideLength = 50;
 int moveCount;
-int numRockets = 5;
+int numRockets = 20;
 int generationCount = 0;
 Population pop;
 
@@ -20,8 +20,6 @@ void setup() {
 void draw(){
   background(255);
   drawGoal();
-  pop.setFitness(goalX, goalY);
-  println(moveCount);
   if (moveCount <= NUM_MOVES) {
     pop.display(false);
     moveCount++;
@@ -33,15 +31,16 @@ void keyPressed(){
   if(key == 'r'){
     pop.randomPop();
     moveCount = 0;
+    generationCount = 0;
   }
   if(key == ' ' && moveCount > NUM_MOVES){
-    Population test = pop.evolve();
-    pop = test;
-    
-    moveCount = 0;
     for(int i = 0; i < numRockets; i++){
       pop.setFitness(goalX, goalY);
     }
+    Population test = pop.evolve();
+    pop = test;
+    generationCount++;
+    moveCount = 0;
     println("Generation: " + generationCount + " Average fitness: " + pop.getAverageFitness());
   }
 }

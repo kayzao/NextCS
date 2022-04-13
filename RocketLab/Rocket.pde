@@ -70,8 +70,12 @@ class Rocket {
     stroke(0);
     pushMatrix();
     translate(position.x, position.y);
+    /*
+    fill(0);
+    text(position.x + " " + position.y, 0, 0);
+    */
     rotate(theta);
-
+    
     // Thrusters
     rectMode(CENTER);
     fill(0);

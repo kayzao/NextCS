@@ -86,6 +86,6 @@ public class Individual{
   public void updateFitness(int x, int y){ //update fitness based on the center of the goal
     //update fitness based on distance from x, y.
     //FORMULA: 1/distance
-    fitness = 1 / max(dist(x, y, rocket.position.x, rocket.position.y), 0.01f);
+    fitness = 1 / dist(x, y, rocket.position.x, rocket.position.y);
   }
 }
