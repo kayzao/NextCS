@@ -1,6 +1,6 @@
-int NUM_MOVES = 250;
-int goalX = width = 50;
-int goalY = height / 2;
+int NUM_MOVES = 375;
+int goalX;
+int goalY;
 int goalSideLength = 50;
 int moveCount;
 int numRockets = 5;
@@ -9,23 +9,24 @@ Population pop;
 
 void setup() {
   size(500, 500);
+  goalX = width - 50;
+  goalY = height / 2;
   pop = new Population(numRockets);
   pop.randomPop();
   moveCount = 0;
   println("Generation: " + generationCount);
-  pop.setFitness(goalX - goalSideLength / 2, goalY - goalSideLength / 2);
+  pop.setFitness(goalX, goalY);
 }
 void draw(){
   background(255);
-  if (moveCount < NUM_MOVES) {
-    for(int i = 0; i < numRockets; i++){
-      pop.get(i).rocket.run();
-      pop.get(i).rocket.display();
-    }
+  drawGoal();
+  pop.setFitness(goalX, goalY);
+  println(moveCount);
+  if (moveCount <= NUM_MOVES) {
+    pop.display(false);
     moveCount++;
-  }
-  else {
-    for(int i = 0; i < numRockets; i++) pop.get(i).rocket.display();
+  } else {
+    pop.display(true);
   }
 }
 void keyPressed(){
@@ -33,12 +34,13 @@ void keyPressed(){
     pop.randomPop();
     moveCount = 0;
   }
-  if(key == ' '){
-    pop = pop.evolve();
+  if(key == ' ' && moveCount > NUM_MOVES){
+    Population test = pop.evolve();
+    pop = test;
     
     moveCount = 0;
     for(int i = 0; i < numRockets; i++){
-      pop.setFitness(goalX - goalSideLength / 2, goalY - goalSideLength / 2);
+      pop.setFitness(goalX, goalY);
     }
     println("Generation: " + generationCount + " Average fitness: " + pop.getAverageFitness());
   }

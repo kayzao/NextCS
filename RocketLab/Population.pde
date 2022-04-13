@@ -24,9 +24,16 @@ class Population{
   public Individual get(int ind){
     return pop[ind];
   }
+  
+  public void display(boolean showFitness){
+    for(int i = 0; i < pop.length; i++){
+      pop[i].rocket.run();
+      pop[i].display(showFitness);
+    }
+  }
 
   public void setFitness(int x, int y){
-    float totalFitness = 0;
+    totalFitness = 0;
     for(int i = 0; i < pop.length; i++){
       pop[i].updateFitness(x, y);
       totalFitness += pop[i].getFitness();
@@ -58,10 +65,6 @@ class Population{
   public float getAverageFitness(){
     return totalFitness / pop.length;
   }
-
-  public void setTarget(Individual indiv){
-    set(0, indiv);
-  }
   
   public void set(int index, Individual indiv){
     pop[index] = indiv;
@@ -91,8 +94,7 @@ class Population{
   public Population evolve(){ 
     Population newPop = new Population(pop.length, mutationRate);
     int bestInd = getBestIndex();
-    newPop.setTarget(pop[0]);
-    for(int i = 1; i < pop.length; i++){
+    for(int i = 0; i < pop.length; i++){
       if(i == bestInd){
         newPop.set(i, pop[i]);
         continue;

@@ -1,5 +1,5 @@
-public static final int CHROMOSOME_LENGTH = 100; //first 50 for magnitude, last 50 for angle
-public static final int ACTIONS_LENGTH = 50;
+public static final int CHROMOSOME_LENGTH = 200; //first 50 for magnitude, last 50 for angle
+public static final int ACTIONS_LENGTH = 100;
 
 public enum GeneLengths { 
   //magnitude comes in increments of 1/150, up to 0.1
@@ -30,6 +30,7 @@ public class Individual{
       chromosome[i + ACTIONS_LENGTH] = new Gene(GeneLengths.ANGLE.getLength());
     }
     if(random) for(Gene g : chromosome) g.randomize();
+    if(!random) setRocket();
   }
   public Individual(){
     this(false);
@@ -45,6 +46,7 @@ public class Individual{
 
   public void display(boolean showFitness){
     rocket.display();
+    fill(0);
     if(showFitness) text(fitness , rocket.position.x, rocket.position.y);
   }
 
