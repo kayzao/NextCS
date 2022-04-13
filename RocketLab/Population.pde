@@ -25,6 +25,14 @@ class Population{
     return pop[ind];
   }
 
+  public void setFitness(int x, int y){
+    float totalFitness = 0;
+    for(int i = 0; i < pop.length; i++){
+      pop[i].updateFitness(x, y);
+      totalFitness += pop[i].getFitness();
+    }
+  }
+
   public int getBestIndex(){
     float bestFitness = 0.0;
     int bestIndex = 0;
