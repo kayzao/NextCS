@@ -20,7 +20,7 @@ public enum GeneLengths {
 
 public class Individual{
   private Gene[] chromosome;
-  public Rocket rocket;
+  private Rocket rocket;
   private float fitness = 0;
 
   public Individual(boolean random){
@@ -32,6 +32,7 @@ public class Individual{
     if(random) for(Gene g : chromosome) g.randomize();
     else setRocket();
   }
+  
   public Individual(){
     this(false);
   }
@@ -48,6 +49,14 @@ public class Individual{
     rocket.display();
     fill(0);
     if(showFitness) text(fitness , rocket.position.x, rocket.position.y);
+  }
+  
+  public float getX(){
+    return rocket.position.x;
+  }
+  
+  public float getY(){
+    return rocket.position.y;
   }
 
   public float getFitness(){
@@ -68,6 +77,15 @@ public class Individual{
     }
     rocket = new Rocket(angles, mags, ACTIONS_LENGTH);
   }
+  
+  public void resetRocket(){
+    rocket.reset();
+    setRocket();
+  }
+  
+  public void moveRocket(){
+    rocket.run();
+  }
 
   public void mutate(float rate){
     for(Gene g : chromosome) if(random(1) < rate) g.mutate();
@@ -84,9 +102,8 @@ public class Individual{
   }
 
   public void updateFitness(int x, int y){ //update fitness based on the center of the goal
-    //update fitness based on distance from x, y.
-    //FORMULA: 1/distance
-    fitness = max(0, 1 - (dist(x, y, rocket.position.x, rocket.position.y) / width));
-    text(fitness, rocket.position.x, rocket.position.y);
+    //update fitness based on distance from x, y
+    fitness = pow(max(0, 1 - (dist(x, y, rocket.position.x, rocket.position.y) / max(max(dist(width, 0, goalX, goalY), dist(width, height, goalX, goalY)), max(dist(0, 0, goalX, goalY), dist(0, height, goalX, goalY))))), 2);
+    //fitness = 1 / dist(x, y, getX(), getY());
   }
 }

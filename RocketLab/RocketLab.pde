@@ -11,15 +11,17 @@ void setup() {
   size(500, 500);
   goalX = width - 50;
   goalY = height / 2;
-  pop = new Population(numRockets);
+  pop = new Population(numRockets, 0.03);
   pop.randomPop();
   moveCount = 0;
-  println("Generation: " + generationCount);
   pop.setGoal(goalX, goalY, goalSideLength);
   pop.setFitness();
+  frameRate(240);
 }
+
 void draw(){
   background(255);
+  text("GEN #" + generationCount, 20, 20);
   drawGoal();
   if (moveCount <= NUM_MOVES) {
     pop.display(false, true);
@@ -29,6 +31,7 @@ void draw(){
   }
   pop.setFitness();
 }
+
 void keyPressed(){
   
   if(key == 'r'){
@@ -37,7 +40,7 @@ void keyPressed(){
     generationCount = 0;
   }
 
-  if(key == ' ' && moveCount > NUM_MOVES){
+  if(key == 'm' && moveCount > NUM_MOVES){
     for(int i = 0; i < numRockets; i++){
       pop.setFitness();
     }
@@ -52,7 +55,7 @@ void keyPressed(){
 
 void drawGoal(){
   fill(255, 255, 0);
-  stroke(255);
+  stroke(0);
   strokeWeight(1);
   rect(goalX, goalY, goalSideLength / 2, goalSideLength / 2);
 }

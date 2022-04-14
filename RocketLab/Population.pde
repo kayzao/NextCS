@@ -29,13 +29,13 @@ class Population{
   public void display(boolean showFitness, boolean move){
     for(int i = 0; i < pop.length; i++){
       
-      float posX = pop[i].rocket.position.x;
-      float posY = pop[i].rocket.position.y;
+      float posX = pop[i].getX();
+      float posY = pop[i].getY();
       //if inside border and move is true
       if(posX >= 0 && posX <= width && posY >= 0 && posY <= height && move){
         //if not touching goal
         if(!(posX >= goalX - (0.5 * goalSideLength) && posX <= goalX + (0.5 * goalSideLength) && posY >= goalY - (0.5 * goalSideLength) && posY <= goalY + (0.5 * goalSideLength))){
-          pop[i].rocket.run();
+          pop[i].moveRocket();
         }
       }
       pop[i].display(showFitness);
@@ -111,20 +111,17 @@ class Population{
     newPop.setGoal(goalX, goalY, goalSideLength);
     int bestInd = getBestIndex();
     for(int i = 0; i < pop.length; i++){
-      
       if(i == bestInd){
-        pop[i].rocket.reset();
-        pop[i].setRocket();
+        pop[i].resetRocket();
         newPop.set(i, pop[i]);
-        
         continue;
       } 
+      
       Individual parent1 = select();
       Individual parent2 = select();
       Individual child = parent1.crossover(parent2);
       child.mutate(mutationRate);
-      child.rocket.reset();
-      child.setRocket();
+      child.resetRocket();
       newPop.set(i, child);
     }
     return newPop;
