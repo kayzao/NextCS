@@ -30,7 +30,7 @@ public class Individual{
       chromosome[i + ACTIONS_LENGTH] = new Gene(GeneLengths.ANGLE.getLength());
     }
     if(random) for(Gene g : chromosome) g.randomize();
-    if(!random) setRocket();
+    else setRocket();
   }
   public Individual(){
     this(false);
@@ -86,6 +86,7 @@ public class Individual{
   public void updateFitness(int x, int y){ //update fitness based on the center of the goal
     //update fitness based on distance from x, y.
     //FORMULA: 1/distance
-    fitness = 1 / dist(x, y, rocket.position.x, rocket.position.y);
+    fitness = max(0, 1 - (dist(x, y, rocket.position.x, rocket.position.y) / width));
+    text(fitness, rocket.position.x, rocket.position.y);
   }
 }

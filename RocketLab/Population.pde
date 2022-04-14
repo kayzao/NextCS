@@ -2,7 +2,8 @@ class Population{
   private Individual[] pop;
   private float totalFitness;
   private float mutationRate;
-    
+  private int goalX, goalY, goalSideLength;
+  
   Population(int popSize) {
     this(popSize, 0.05);
   }
@@ -12,7 +13,7 @@ class Population{
     totalFitness = 0.0;
     this.mutationRate = mutationRate;
   }
-
+  
   public float getMutationRate(){
     return mutationRate;
   }
@@ -25,17 +26,31 @@ class Population{
     return pop[ind];
   }
   
-  public void display(boolean showFitness){
+  public void display(boolean showFitness, boolean move){
     for(int i = 0; i < pop.length; i++){
-      if(!showFitness) pop[i].rocket.run();
+      
+      float posX = pop[i].rocket.position.x;
+      float posY = pop[i].rocket.position.y;
+      //if inside border and move is true
+      if(posX >= 0 && posX <= width && posY >= 0 && posY <= height && move){
+        //if not touching goal
+        if(!(posX >= goalX - (0.5 * goalSideLength) && posX <= goalX + (0.5 * goalSideLength) && posY >= goalY - (0.5 * goalSideLength) && posY <= goalY + (0.5 * goalSideLength))){
+          pop[i].rocket.run();
+        }
+      }
       pop[i].display(showFitness);
     }
   }
-
-  public void setFitness(int x, int y){
+  
+  public void setGoal(int x, int y, int sideLength){
+    goalX = x;
+    goalY = y;
+    goalSideLength = sideLength;
+  }
+  public void setFitness(){
     totalFitness = 0;
     for(int i = 0; i < pop.length; i++){
-      pop[i].updateFitness(x, y);
+      pop[i].updateFitness(goalX, goalY);
       totalFitness += pop[i].getFitness();
     }
   }
@@ -63,7 +78,7 @@ class Population{
   }
 
   public float getAverageFitness(){
-    return totalFitness / pop.length;
+    return totalFitness / float(pop.length);
   }
   
   public void set(int index, Individual indiv){
@@ -93,13 +108,17 @@ class Population{
 
   public Population evolve(){ 
     Population newPop = new Population(pop.length, mutationRate);
+    newPop.setGoal(goalX, goalY, goalSideLength);
     int bestInd = getBestIndex();
     for(int i = 0; i < pop.length; i++){
-      /*
+      
       if(i == bestInd){
+        pop[i].rocket.reset();
+        pop[i].setRocket();
         newPop.set(i, pop[i]);
+        
         continue;
-      } */
+      } 
       Individual parent1 = select();
       Individual parent2 = select();
       Individual child = parent1.crossover(parent2);

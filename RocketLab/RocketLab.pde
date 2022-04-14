@@ -15,33 +15,38 @@ void setup() {
   pop.randomPop();
   moveCount = 0;
   println("Generation: " + generationCount);
-  pop.setFitness(goalX, goalY);
+  pop.setGoal(goalX, goalY, goalSideLength);
+  pop.setFitness();
 }
 void draw(){
   background(255);
   drawGoal();
   if (moveCount <= NUM_MOVES) {
-    pop.display(false);
+    pop.display(false, true);
     moveCount++;
   } else {
-    pop.display(true);
+    pop.display(true, false);
   }
+  pop.setFitness();
 }
 void keyPressed(){
+  
   if(key == 'r'){
     pop.randomPop();
     moveCount = 0;
     generationCount = 0;
   }
+
   if(key == ' ' && moveCount > NUM_MOVES){
     for(int i = 0; i < numRockets; i++){
-      pop.setFitness(goalX, goalY);
+      pop.setFitness();
     }
+    float avg = pop.getAverageFitness();
     Population test = pop.evolve();
     pop = test;
     generationCount++;
     moveCount = 0;
-    println("Generation: " + generationCount + " Average fitness: " + pop.getAverageFitness());
+    println("REPORT: Generation #" + generationCount + ": Average fitness: " + avg);
   }
 }
 
