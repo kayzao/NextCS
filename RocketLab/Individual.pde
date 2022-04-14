@@ -103,7 +103,7 @@ public class Individual{
 
   public void updateFitness(int x, int y){ //update fitness based on the center of the goal
     //update fitness based on distance from x, y
-    fitness = pow(max(0, 1 - (dist(x, y, rocket.position.x, rocket.position.y) / max(max(dist(width, 0, goalX, goalY), dist(width, height, goalX, goalY)), max(dist(0, 0, goalX, goalY), dist(0, height, goalX, goalY))))), 2);
+    fitness = pow(max(0, 1 - (dist(x, y, rocket.position.x, rocket.position.y) / max(max(dist(width, 0, goalX, goalY), dist(width, height, goalX, goalY)), max(dist(0, 0, goalX, goalY), dist(0, height, goalX, goalY))))), 3);
     //fitness = 1 / dist(x, y, getX(), getY());
   }
 }

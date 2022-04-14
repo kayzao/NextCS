@@ -7,22 +7,40 @@ int numRockets = 20;
 int generationCount = 0;
 Population pop;
 
+boolean auto;
+
 void setup() {
   size(500, 500);
+  frameRate(240);
+  /*
   goalX = width - 50;
   goalY = height / 2;
+  */
+  auto = false;
+  if(random(1) < (1.0 / 3.0)){ //along right side
+    goalX = width - goalSideLength;
+    goalY = int(random(goalSideLength * 0.5, height - goalSideLength * 0.5));
+  } else if(random(1) < 0.5){ //along top side
+    goalX = int(random(goalSideLength * 0.5, width - goalSideLength * 0.5));
+    goalY = goalSideLength;
+  } else { //along bottom side
+    goalX = int(random(goalSideLength * 0.5, width - goalSideLength * 0.5));
+    goalY = height - goalSideLength;
+  }
   pop = new Population(numRockets, 0.03);
   pop.randomPop();
   moveCount = 0;
   pop.setGoal(goalX, goalY, goalSideLength);
   pop.setFitness();
-  frameRate(240);
+  
 }
 
 void draw(){
   background(255);
-  text("GEN #" + generationCount, 20, 20);
   drawGoal();
+  fill(0);
+  text("GEN #" + generationCount + " AUTO MODE: " + auto, 20, 20);
+
   if (moveCount <= NUM_MOVES) {
     pop.display(false, true);
     moveCount++;
@@ -35,12 +53,10 @@ void draw(){
 void keyPressed(){
   
   if(key == 'r'){
-    pop.randomPop();
-    moveCount = 0;
-    generationCount = 0;
+    setup();
   }
 
-  if(key == 'm' && moveCount > NUM_MOVES){
+  if((key == 'm' || auto) && moveCount > NUM_MOVES){
     for(int i = 0; i < numRockets; i++){
       pop.setFitness();
     }
@@ -50,6 +66,10 @@ void keyPressed(){
     generationCount++;
     moveCount = 0;
     println("REPORT: Generation #" + generationCount + ": Average fitness: " + avg);
+  }
+
+  if(key == ' '){
+    auto = !auto;
   }
 }
 
