@@ -9,7 +9,7 @@ public class Gene {
     this(original.getGenotype().length);
     arrayCopy(original.getGenotype(), genotype);
   }
-  
+
   public int getValue() {
     int value = 0;
     //converts to base10 from the back, and ending at the front

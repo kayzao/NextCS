@@ -1,5 +1,8 @@
 EXTENSIONS: 
 - Locations of goal is randomly determined, and will always generate near the top, right, or bottom side of window
+- Autonomous mode is available as an option to automatically evolve the current generation once it has been simulated
+- The highest-fitness rocket is always highlighted in blue
+- The mutation rate can be changed via key presses
 
 1)  Gene can be used eactly as written, because it doesn't require modifications to 
     change from forming the properties of a polygon, to the properties of a rocket, as 

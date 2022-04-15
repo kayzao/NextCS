@@ -24,50 +24,75 @@ int numRockets = 20;
 int generationCount = 0;
 Population pop;
 
+boolean auto;
+
  public void setup() {
   /* size commented out by preprocessor */;
+  frameRate(240);
+  /*
   goalX = width - 50;
   goalY = height / 2;
-  pop = new Population(numRockets);
+  */
+  auto = false;
+  if(random(1) < (1.0f / 3.0f)){ //along right side
+    goalX = width - goalSideLength;
+    goalY = PApplet.parseInt(random(goalSideLength * 0.5f, height - goalSideLength * 0.5f));
+  } else if(random(1) < 0.5f){ //along top side
+    goalX = PApplet.parseInt(random(goalSideLength * 0.5f, width - goalSideLength * 0.5f));
+    goalY = goalSideLength;
+  } else { //along bottom side
+    goalX = PApplet.parseInt(random(goalSideLength * 0.5f, width - goalSideLength * 0.5f));
+    goalY = height - goalSideLength;
+  }
+  pop = new Population(numRockets, 0.03f);
   pop.randomPop();
   moveCount = 0;
-  println("Generation: " + generationCount);
-  pop.setFitness(goalX, goalY);
+  pop.setGoal(goalX, goalY, goalSideLength);
+  pop.setFitness();
+  println("Press R to randomize layout, M to evolve rockets, and SPACE to enable autonomous mode");
 }
+
  public void draw(){
   background(255);
   drawGoal();
+  fill(0);
+  text("GEN " + generationCount + " | AUTO MODE: " + auto, 20, 20);
+
   if (moveCount <= NUM_MOVES) {
-    pop.display(false);
+    pop.display(false, true);
     moveCount++;
   } else {
-    pop.display(true);
+    pop.display(true, false);
   }
-  pop.setFitness(goalX, goalY);
+  pop.setFitness();
 }
+
  public void keyPressed(){
   
   if(key == 'r'){
-    pop.randomPop();
-    moveCount = 0;
-    generationCount = 0;
+    setup();
   }
 
-  if(key == ' ' && moveCount > NUM_MOVES){
+  if((key == 'm' || auto) && moveCount > NUM_MOVES){
     for(int i = 0; i < numRockets; i++){
-      pop.setFitness(goalX, goalY);
+      pop.setFitness();
     }
+    float avg = pop.getAverageFitness();
     Population test = pop.evolve();
     pop = test;
     generationCount++;
     moveCount = 0;
-    println("Generation: " + generationCount + " Average fitness: " + pop.getAverageFitness());
+    println("REPORT: Generation #" + generationCount + ": Average fitness: " + avg);
+  }
+
+  if(key == ' '){
+    auto = !auto;
   }
 }
 
  public void drawGoal(){
   fill(255, 255, 0);
-  stroke(255);
+  stroke(0);
   strokeWeight(1);
   rect(goalX, goalY, goalSideLength / 2, goalSideLength / 2);
 }
@@ -143,7 +168,7 @@ public enum GeneLengths {
 
 public class Individual{
   private Gene[] chromosome;
-  public Rocket rocket;
+  private Rocket rocket;
   private float fitness = 0;
 
   public Individual(boolean random){
@@ -155,6 +180,7 @@ public class Individual{
     if(random) for(Gene g : chromosome) g.randomize();
     else setRocket();
   }
+  
   public Individual(){
     this(false);
   }
@@ -171,6 +197,14 @@ public class Individual{
     rocket.display();
     fill(0);
     if(showFitness) text(fitness , rocket.position.x, rocket.position.y);
+  }
+  
+  public float getX(){
+    return rocket.position.x;
+  }
+  
+  public float getY(){
+    return rocket.position.y;
   }
 
   public float getFitness(){
@@ -191,6 +225,15 @@ public class Individual{
     }
     rocket = new Rocket(angles, mags, ACTIONS_LENGTH);
   }
+  
+  public void resetRocket(){
+    rocket.reset();
+    setRocket();
+  }
+  
+  public void moveRocket(){
+    rocket.run();
+  }
 
   public void mutate(float rate){
     for(Gene g : chromosome) if(random(1) < rate) g.mutate();
@@ -207,17 +250,17 @@ public class Individual{
   }
 
   public void updateFitness(int x, int y){ //update fitness based on the center of the goal
-    //update fitness based on distance from x, y.
-    //FORMULA: 1/distance
-    fitness = 1 / dist(x, y, rocket.position.x, rocket.position.y);
-    text(fitness, rocket.position.x, rocket.position.y);
+    //update fitness based on distance from x, y
+    fitness = pow(max(0, 1 - (dist(x, y, rocket.position.x, rocket.position.y) / max(max(dist(width, 0, goalX, goalY), dist(width, height, goalX, goalY)), max(dist(0, 0, goalX, goalY), dist(0, height, goalX, goalY))))), 3);
+    //fitness = 1 / dist(x, y, getX(), getY());
   }
 }
 class Population{
   private Individual[] pop;
   private float totalFitness;
   private float mutationRate;
-    
+  private int goalX, goalY, goalSideLength;
+  
   Population(int popSize) {
     this(popSize, 0.05f);
   }
@@ -227,7 +270,7 @@ class Population{
     totalFitness = 0.0f;
     this.mutationRate = mutationRate;
   }
-
+  
   public float getMutationRate(){
     return mutationRate;
   }
@@ -240,17 +283,31 @@ class Population{
     return pop[ind];
   }
   
-  public void display(boolean showFitness){
+  public void display(boolean showFitness, boolean move){
     for(int i = 0; i < pop.length; i++){
-      if(!showFitness) pop[i].rocket.run();
+      
+      float posX = pop[i].getX();
+      float posY = pop[i].getY();
+      //if inside border and move is true
+      if(posX >= 0 && posX <= width && posY >= 0 && posY <= height && move){
+        //if not touching goal
+        if(!(posX >= goalX - (0.5f * goalSideLength) && posX <= goalX + (0.5f * goalSideLength) && posY >= goalY - (0.5f * goalSideLength) && posY <= goalY + (0.5f * goalSideLength))){
+          pop[i].moveRocket();
+        }
+      }
       pop[i].display(showFitness);
     }
   }
-
-  public void setFitness(int x, int y){
+  
+  public void setGoal(int x, int y, int sideLength){
+    goalX = x;
+    goalY = y;
+    goalSideLength = sideLength;
+  }
+  public void setFitness(){
     totalFitness = 0;
     for(int i = 0; i < pop.length; i++){
-      pop[i].updateFitness(x, y);
+      pop[i].updateFitness(goalX, goalY);
       totalFitness += pop[i].getFitness();
     }
   }
@@ -308,19 +365,20 @@ class Population{
 
   public Population evolve(){ 
     Population newPop = new Population(pop.length, mutationRate);
+    newPop.setGoal(goalX, goalY, goalSideLength);
     int bestInd = getBestIndex();
     for(int i = 0; i < pop.length; i++){
-      /*
       if(i == bestInd){
+        pop[i].resetRocket();
         newPop.set(i, pop[i]);
         continue;
-      } */
+      } 
+      
       Individual parent1 = select();
       Individual parent2 = select();
       Individual child = parent1.crossover(parent2);
       child.mutate(mutationRate);
-      child.rocket.reset();
-      child.setRocket();
+      child.resetRocket();
       newPop.set(i, child);
     }
     return newPop;

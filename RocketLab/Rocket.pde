@@ -64,7 +64,7 @@ class Rocket {
     acceleration.mult(0);
   }
 
-  void display() {
+  void display(boolean highlight) {
     float theta = velocity.heading() + PI/2;
     fill(200, 100);
     stroke(0);
@@ -72,18 +72,20 @@ class Rocket {
     translate(position.x, position.y);
     /*
     fill(0);
-    text(position.x + " " + position.y, 0, 0);
-    */
+     text(position.x + " " + position.y, 0, 0);
+     */
     rotate(theta);
-    
+
     // Thrusters
     rectMode(CENTER);
     fill(0);
+    if(highlight) fill(255);
     rect(-r/2, r*2, r/2, r);
     rect(r/2, r*2, r/2, r);
 
     // Rocket body
     fill(175);
+    if(highlight) fill(100, 210, 255);
     beginShape(TRIANGLES);
     vertex(0, -r*2);
     vertex(-r, r*2);
@@ -92,5 +94,4 @@ class Rocket {
 
     popMatrix();
   }
-
 }
