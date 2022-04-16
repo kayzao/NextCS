@@ -88,7 +88,7 @@ class Population {
 
   public void setMutationRate(float mutationRate) {
     if (mutationRate > 1) mutationRate = 1;
-    if (mutationRate <= 0.005) mutationRate = 0.005;
+    if (mutationRate <= 0.001) mutationRate = 0.001;
     this.mutationRate = mutationRate;
   }
   public void setup() {
