@@ -35,7 +35,15 @@ class Population {
       if (posX >= 0 && posX <= width && posY >= 0 && posY <= height && move) {
         //if not touching goal
         if (!(posX >= goalX - (0.5 * goalSideLength) && posX <= goalX + (0.5 * goalSideLength) && posY >= goalY - (0.5 * goalSideLength) && posY <= goalY + (0.5 * goalSideLength))) {
-          pop[i].moveRocket();
+          //if not touchign any of the obstacles from obstacles[][]
+          boolean contact = false;
+          for(int j = 0; j < obstacles.length; j++){
+            if(posX >= obstacles[j][0] && posX <= obstacles[j][0] + obstacles[j][2] && posY >= obstacles[j][1] && posY <= obstacles[j][1] + obstacles[j][3]){
+              contact = true;
+              break;
+            } 
+          }
+          if(!contact) pop[i].moveRocket();  
         }
       }
       if(i == getBestIndex()) pop[i].display(showFitness, true);
@@ -91,6 +99,7 @@ class Population {
     if (mutationRate <= 0.001) mutationRate = 0.001;
     this.mutationRate = mutationRate;
   }
+
   public void setup() {
     for (Individual i : pop) i.setRocket();
   }
