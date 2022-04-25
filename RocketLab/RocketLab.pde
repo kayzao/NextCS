@@ -1,4 +1,4 @@
-int NUM_MOVES = 500;
+int NUM_MOVES = 600;
 int goalX, goalY, goalSideLength = 50;
 int moveCount;
 int numRockets = 10;
@@ -7,13 +7,15 @@ int obstacleStartX, obstacleStartY, obstacleMinW, obstacleMaxW, obstacleMinL, ob
 float mutationRate;
 Population pop;
 int[][] obstacles;
-boolean auto;
+boolean autoMode;
+boolean obstaclesEnabled;
 color OBSTACLE_COLOR = color(175);
 
 void setup() {
   size(500, 500);
   frameRate(240);
-  auto = false;
+  autoMode = false;
+  obstaclesEnabled = true;
   mutationRate = 0.03;
   if (random(1) < (1.0 / 3.0)) { //along right side
     goalX = width - goalSideLength;
@@ -38,24 +40,37 @@ void setup() {
   obstacleMinL = 10;
   obstacleMaxL = 75;
   obstacles = new int[int(random(1, 10))][4];
-  if(obstacles.length > 0) createObstacles();
-  println("Press R to randomize layout, M to evolve rockets, SPACE to enable autonomous mode, and W and S to change the mutation rate");
+  if(obstacles.length <= 0) obstaclesEnabled = false;
+  if(obstaclesEnabled) createObstacles();
+  println("========================== WELCOME ==========================");
+  println("Press: R to randomize layout, M to evolve rockets, SPACE to enable autonomous mode");
+  println("       W and S to change the mutation rate, and O to toggle on/off obstacles");
+  println("=============================================================");
 }
 
 void draw() {
   background(255);
+  rectMode(CENTER);
   drawGoal();
-  if(obstacles.length > 0) drawObstacles();
-  fill(0);
-  text("GEN " + generationCount + " | AUTO MODE: " + (auto ? "ACTIVE" : "INACTIVE"), 20, 10);
-  text("MUTATION RATE: " + roundDigits(pop.getMutationRate(), 3), 20, 20);
+  if(obstaclesEnabled || moveCount > NUM_MOVES) drawObstacles();
   if (moveCount <= NUM_MOVES) {
     pop.display(false, true);
     moveCount++;
   } else {
-    if (auto) evolve();
+    if (autoMode) evolve();
     else pop.display(true, false);
   }
+
+  fill(255, 255, 255, 175);
+  stroke(200);
+  rectMode(CORNER);
+  String m0 = "GEN " + generationCount + " | AUTO MODE: " + (autoMode ? "ACTIVE" : "INACTIVE") + " | OBSTACLES: " + (obstaclesEnabled ? "ENABLED" : "DISABLED");
+  String m1 = "MUTATION RATE: " + roundDigits(pop.getMutationRate(), 3);
+  rect(11, 0, m0.length() * 6, 25, 5);
+  fill(0);
+  text(m0, 20, 11);
+  text(m1, 60, 22);
+
   pop.setFitness();
 }
 
@@ -63,8 +78,12 @@ void keyPressed() {
 
   if (key == 'r') {
     if (generationCount > 0) println("=============== RESET: GENERATION 0 ===============");
-    obstacles = new int[int(random(1, 10))][4];
-    if(obstacles.length > 0) createObstacles();
+    if(obstaclesEnabled){
+      obstacles = new int[int(random(1, 10))][4];
+      createObstacles();
+    } else {
+      obstacles = new int[0][4];
+    }
     generationCount = 0;
     if (random(1) < (1.0 / 3.0)) { //along right side
       goalX = width - goalSideLength;
@@ -88,7 +107,7 @@ void keyPressed() {
   }
 
   if (key == ' ') {
-    auto= !auto;
+    autoMode = !autoMode;
   }
 
   if (key == 'w') {
@@ -101,12 +120,22 @@ void keyPressed() {
     pop.setMutationRate(mutationRate);
     mutationRate = pop.getMutationRate();
   }
+  if (key == 'o'){
+    if(moveCount < NUM_MOVES) return;
+    obstaclesEnabled = !obstaclesEnabled;
+    if(obstaclesEnabled){
+      obstacles = new int[0][4];
+      obstacles = new int[int(random(1, 10))][4];
+      createObstacles();
+    } 
+  }
 }
 
 void drawGoal() {
   fill(255, 255, 0);
   stroke(0);
   strokeWeight(1);
+  rectMode(CENTER);
   rect(goalX, goalY, goalSideLength / 2, goalSideLength / 2);
 }
 
@@ -120,6 +149,7 @@ void createObstacles(){
 }
 
 void drawObstacles(){
+  rectMode(CENTER);
   for(int i = 0; i < obstacles.length; i++){
     fill(OBSTACLE_COLOR);
     rect(obstacles[i][0], obstacles[i][1], obstacles[i][2], obstacles[i][3]);

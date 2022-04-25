@@ -1,5 +1,5 @@
-public static final int CHROMOSOME_LENGTH = 200; //first 50 for magnitude, last 50 for angle
-public static final int ACTIONS_LENGTH = 100;
+public static final int CHROMOSOME_LENGTH = 600; //length of chromosome
+public static final int ACTIONS_LENGTH = 300; //length of actions, first [ACTIONS_LENGTH] genes of chromosome are magnitude, next [ACTIONS_LENGTH] genes are angle
 
 public enum GeneLengths {
   //magnitude comes in increments of 1/150, up to 0.1

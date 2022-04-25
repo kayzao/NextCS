@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class RocketLab extends PApplet {
 
-int NUM_MOVES = 500;
+int NUM_MOVES = 600;
 int goalX, goalY, goalSideLength = 50;
 int moveCount;
 int numRockets = 10;
@@ -24,13 +24,15 @@ int obstacleStartX, obstacleStartY, obstacleMinW, obstacleMaxW, obstacleMinL, ob
 float mutationRate;
 Population pop;
 int[][] obstacles;
-boolean auto;
+boolean autoMode;
+boolean obstaclesEnabled;
 int OBSTACLE_COLOR = color(175);
 
  public void setup() {
   /* size commented out by preprocessor */;
   frameRate(240);
-  auto = false;
+  autoMode = false;
+  obstaclesEnabled = true;
   mutationRate = 0.03f;
   if (random(1) < (1.0f / 3.0f)) { //along right side
     goalX = width - goalSideLength;
@@ -55,24 +57,35 @@ int OBSTACLE_COLOR = color(175);
   obstacleMinL = 10;
   obstacleMaxL = 75;
   obstacles = new int[PApplet.parseInt(random(1, 10))][4];
-  if(obstacles.length > 0) createObstacles();
-  println("Press R to randomize layout, M to evolve rockets, SPACE to enable autonomous mode, and W and S to change the mutation rate");
+  if(obstacles.length <= 0) obstaclesEnabled = false;
+  if(obstaclesEnabled) createObstacles();
+  println("========================== WELCOME ==========================");
+  println("Press: R to randomize layout, M to evolve rockets, SPACE to enable autonomous mode");
+  println("       W and S to change the mutation rate, and O to toggle on/off obstacles");
+  println("=============================================================");
 }
 
  public void draw() {
   background(255);
   drawGoal();
-  if(obstacles.length > 0) drawObstacles();
-  fill(0);
-  text("GEN " + generationCount + " | AUTO MODE: " + (auto ? "ACTIVE" : "INACTIVE"), 20, 10);
-  text("MUTATION RATE: " + roundDigits(pop.getMutationRate(), 4), 20, 20);
+  if(obstaclesEnabled || moveCount > NUM_MOVES) drawObstacles();
   if (moveCount <= NUM_MOVES) {
     pop.display(false, true);
     moveCount++;
   } else {
-    if (auto) evolve();
+    if (autoMode) evolve();
     else pop.display(true, false);
   }
+
+  fill(255, 255, 255, 100);
+  stroke(200);
+  String m0 = "GEN " + generationCount + " | AUTO MODE: " + (autoMode ? "ACTIVE" : "INACTIVE") + " | OBSTACLES: " + (obstaclesEnabled ? "ENABLED" : "DISABLED");
+  String m1 = "MUTATION RATE: " + roundDigits(pop.getMutationRate(), 3);
+  rect(10, 15, m0.length() * 10, 23, 5);
+  fill(0);
+  text(m0, 20, 10);
+  text(m1, 20, 20);
+
   pop.setFitness();
 }
 
@@ -80,8 +93,12 @@ int OBSTACLE_COLOR = color(175);
 
   if (key == 'r') {
     if (generationCount > 0) println("=============== RESET: GENERATION 0 ===============");
-    obstacles = new int[PApplet.parseInt(random(1, 10))][4];
-    if(obstacles.length > 0) createObstacles();
+    if(obstaclesEnabled){
+      obstacles = new int[PApplet.parseInt(random(1, 10))][4];
+      createObstacles();
+    } else {
+      obstacles = new int[0][4];
+    }
     generationCount = 0;
     if (random(1) < (1.0f / 3.0f)) { //along right side
       goalX = width - goalSideLength;
@@ -105,7 +122,7 @@ int OBSTACLE_COLOR = color(175);
   }
 
   if (key == ' ') {
-    auto= !auto;
+    autoMode = !autoMode;
   }
 
   if (key == 'w') {
@@ -117,6 +134,15 @@ int OBSTACLE_COLOR = color(175);
     mutationRate -= 0.001f;
     pop.setMutationRate(mutationRate);
     mutationRate = pop.getMutationRate();
+  }
+  if (key == 'o'){
+    if(moveCount < NUM_MOVES) return;
+    obstaclesEnabled = !obstaclesEnabled;
+    if(obstaclesEnabled){
+      obstacles = new int[0][4];
+      obstacles = new int[PApplet.parseInt(random(1, 10))][4];
+      createObstacles();
+    } 
   }
 }
 
@@ -147,8 +173,6 @@ int OBSTACLE_COLOR = color(175);
   for (int i = 0; i < numRockets; i++) {
     pop.setFitness();
   }
-  //float avg = round(pop.getAverageFitness() * 1000000) / 1000000f;
-  //float best = round(pop.getBestFitness() * 1000000) / 1000000f;
   String avg = roundDigits(pop.getAverageFitness(), 6);
   String best = roundDigits(pop.getBestFitness(), 6);
   Population test = pop.evolve();
@@ -217,8 +241,8 @@ public class Gene {
     return genotype;
   }
 }
-public static final int CHROMOSOME_LENGTH = 200; //first 50 for magnitude, last 50 for angle
-public static final int ACTIONS_LENGTH = 100;
+public static final int CHROMOSOME_LENGTH = 600; //length of chromosome
+public static final int ACTIONS_LENGTH = 300; //length of actions, first [ACTIONS_LENGTH] genes of chromosome are magnitude, next [ACTIONS_LENGTH] genes are angle
 
 public enum GeneLengths {
   //magnitude comes in increments of 1/150, up to 0.1
@@ -370,6 +394,7 @@ class Population {
           //if not touchign any of the obstacles from obstacles[][]
           boolean contact = false;
           for(int j = 0; j < obstacles.length; j++){
+            if(!obstaclesEnabled) break;
             float phw = 0.5f * obstacles[j][2]; //placeholder width (0.5 * width)
             float phh = 0.5f * obstacles[j][3]; //placeholder height (0.5 * height)
             if(posX >= obstacles[j][0] - phw - pop[i].getRocketSize() && posX <= obstacles[j][0] + phw + pop[i].getRocketSize() && posY >= obstacles[j][1] - phh - pop[i].getRocketSize() && posY <= obstacles[j][1] + phh + pop[i].getRocketSize()){

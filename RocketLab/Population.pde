@@ -34,10 +34,11 @@ class Population {
       //if inside border and move is true
       if (posX >= 0 && posX <= width && posY >= 0 && posY <= height && move) {
         //if not touching goal
-        if (!(posX >= goalX - (0.5 * goalSideLength) && posX <= goalX + (0.5 * goalSideLength) && posY >= goalY - (0.5 * goalSideLength) && posY <= goalY + (0.5 * goalSideLength))) {
+        if (!(posX >= goalX - (0.3 * goalSideLength) && posX <= goalX + (0.3 * goalSideLength) && posY >= goalY - (0.3 * goalSideLength) && posY <= goalY + (0.3 * goalSideLength))) {
           //if not touchign any of the obstacles from obstacles[][]
           boolean contact = false;
           for(int j = 0; j < obstacles.length; j++){
+            if(!obstaclesEnabled) break;
             float phw = 0.5 * obstacles[j][2]; //placeholder width (0.5 * width)
             float phh = 0.5 * obstacles[j][3]; //placeholder height (0.5 * height)
             if(posX >= obstacles[j][0] - phw - pop[i].getRocketSize() && posX <= obstacles[j][0] + phw + pop[i].getRocketSize() && posY >= obstacles[j][1] - phh - pop[i].getRocketSize() && posY <= obstacles[j][1] + phh + pop[i].getRocketSize()){

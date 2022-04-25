@@ -93,5 +93,6 @@ class Rocket {
     endShape();
 
     popMatrix();
+    rectMode(CORNER);
   }
 }

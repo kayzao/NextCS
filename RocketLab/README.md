@@ -1,5 +1,6 @@
 EXTENSIONS: 
 - Locations of goal is randomly determined, and will always generate near the top, right, or bottom side of window
+- Obstacles are randomly generated in random amounts, and will block rockets from moving.
 - Autonomous mode is available as an option to automatically evolve the current generation once it has been simulated
 - The highest-fitness rocket is always highlighted in blue
 - The mutation rate can be changed via key presses
