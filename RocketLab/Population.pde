@@ -14,7 +14,7 @@ class Population {
     if (mutationRate > 1 || mutationRate <= 0) mutationRate = 0.05;
     this.mutationRate = mutationRate;
   }
-
+ 
   public float getMutationRate() {
     return mutationRate;
   }
@@ -38,7 +38,9 @@ class Population {
           //if not touchign any of the obstacles from obstacles[][]
           boolean contact = false;
           for(int j = 0; j < obstacles.length; j++){
-            if(posX >= obstacles[j][0] && posX <= obstacles[j][0] + obstacles[j][2] && posY >= obstacles[j][1] && posY <= obstacles[j][1] + obstacles[j][3]){
+            float phw = 0.5 * obstacles[j][2]; //placeholder width (0.5 * width)
+            float phh = 0.5 * obstacles[j][3]; //placeholder height (0.5 * height)
+            if(posX >= obstacles[j][0] - phw - pop[i].getRocketSize() && posX <= obstacles[j][0] + phw + pop[i].getRocketSize() && posY >= obstacles[j][1] - phh - pop[i].getRocketSize() && posY <= obstacles[j][1] + phh + pop[i].getRocketSize()){
               contact = true;
               break;
             } 

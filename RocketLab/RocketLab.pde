@@ -31,8 +31,8 @@ void setup() {
   pop.setGoal(goalX, goalY, goalSideLength);
   pop.setFitness();
   //In the future make the number of obstacles change by keyboard input
-  obstacleStartX = 75;
-  obstacleStartY = 75;
+  obstacleStartX = 100;
+  obstacleStartY = 100;
   obstacleMinW = 10;
   obstacleMaxW = 75;
   obstacleMinL = 10;
@@ -130,10 +130,11 @@ void evolve() {
   for (int i = 0; i < numRockets; i++) {
     pop.setFitness();
   }
-  float avg = pop.getAverageFitness();
+  float avg = round(pop.getAverageFitness() * 1000000) / 1000000f;
+  float best = round(pop.getBestFitness() * 1000000) / 1000000f;
   Population test = pop.evolve();
   pop = test;
   generationCount++;
   moveCount = 0;
-  println("REPORT: Generation #" + (generationCount - 1) + ": Average fitness: " + avg);
+  println("REPORT: Generation #" + (generationCount - 1) + ": Average fitness: " + avg + " Best fitness: " + best);
 }

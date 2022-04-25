@@ -66,6 +66,10 @@ public class Individual {
   public Gene[] getChromosome() {
     return chromosome;
   }
+  
+  public float getRocketSize(){
+    return rocket.r;
+  }
 
   public void setRocket() {
     PVector[] angles = new PVector[ACTIONS_LENGTH];
