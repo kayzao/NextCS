@@ -77,7 +77,7 @@ public class Individual {
     for (int i = ACTIONS_LENGTH; i < 2 * ACTIONS_LENGTH; i++) {
       float theta = float(chromosome[i].getValue()) * (2 * PI) / 511f;
       angles[i - ACTIONS_LENGTH] = new PVector(cos(theta), sin(theta));
-      mags[i - ACTIONS_LENGTH] = float(chromosome[i - ACTIONS_LENGTH].getValue()) / 150f;
+      mags[i - ACTIONS_LENGTH] = float(chromosome[i - ACTIONS_LENGTH].getValue()) / (2*150f);
     }
     rocket = new Rocket(angles, mags, ACTIONS_LENGTH);
   }

@@ -67,6 +67,7 @@ int OBSTACLE_COLOR = color(175);
 
  public void draw() {
   background(255);
+  rectMode(CENTER);
   drawGoal();
   if(obstaclesEnabled || moveCount > NUM_MOVES) drawObstacles();
   if (moveCount <= NUM_MOVES) {
@@ -77,14 +78,15 @@ int OBSTACLE_COLOR = color(175);
     else pop.display(true, false);
   }
 
-  fill(255, 255, 255, 100);
+  fill(255, 255, 255, 175);
   stroke(200);
+  rectMode(CORNER);
   String m0 = "GEN " + generationCount + " | AUTO MODE: " + (autoMode ? "ACTIVE" : "INACTIVE") + " | OBSTACLES: " + (obstaclesEnabled ? "ENABLED" : "DISABLED");
   String m1 = "MUTATION RATE: " + roundDigits(pop.getMutationRate(), 3);
-  rect(10, 15, m0.length() * 10, 23, 5);
+  rect(11, 0, m0.length() * 6, 25, 5);
   fill(0);
-  text(m0, 20, 10);
-  text(m1, 20, 20);
+  text(m0, 20, 11);
+  text(m1, 60, 22);
 
   pop.setFitness();
 }
@@ -150,6 +152,7 @@ int OBSTACLE_COLOR = color(175);
   fill(255, 255, 0);
   stroke(0);
   strokeWeight(1);
+  rectMode(CENTER);
   rect(goalX, goalY, goalSideLength / 2, goalSideLength / 2);
 }
 
@@ -163,6 +166,7 @@ int OBSTACLE_COLOR = color(175);
 }
 
  public void drawObstacles(){
+  rectMode(CENTER);
   for(int i = 0; i < obstacles.length; i++){
     fill(OBSTACLE_COLOR);
     rect(obstacles[i][0], obstacles[i][1], obstacles[i][2], obstacles[i][3]);
@@ -320,7 +324,7 @@ public class Individual {
     for (int i = ACTIONS_LENGTH; i < 2 * ACTIONS_LENGTH; i++) {
       float theta = PApplet.parseFloat(chromosome[i].getValue()) * (2 * PI) / 511f;
       angles[i - ACTIONS_LENGTH] = new PVector(cos(theta), sin(theta));
-      mags[i - ACTIONS_LENGTH] = PApplet.parseFloat(chromosome[i - ACTIONS_LENGTH].getValue()) / 150f;
+      mags[i - ACTIONS_LENGTH] = PApplet.parseFloat(chromosome[i - ACTIONS_LENGTH].getValue()) / (2*150f);
     }
     rocket = new Rocket(angles, mags, ACTIONS_LENGTH);
   }
@@ -390,7 +394,7 @@ class Population {
       //if inside border and move is true
       if (posX >= 0 && posX <= width && posY >= 0 && posY <= height && move) {
         //if not touching goal
-        if (!(posX >= goalX - (0.5f * goalSideLength) && posX <= goalX + (0.5f * goalSideLength) && posY >= goalY - (0.5f * goalSideLength) && posY <= goalY + (0.5f * goalSideLength))) {
+        if (!(posX >= goalX - (0.3f * goalSideLength) && posX <= goalX + (0.3f * goalSideLength) && posY >= goalY - (0.3f * goalSideLength) && posY <= goalY + (0.3f * goalSideLength))) {
           //if not touchign any of the obstacles from obstacles[][]
           boolean contact = false;
           for(int j = 0; j < obstacles.length; j++){
@@ -596,6 +600,7 @@ class Rocket {
     endShape();
 
     popMatrix();
+    rectMode(CORNER);
   }
 }
 
