@@ -5,7 +5,7 @@ class Orb {
   private float psize;
   private color orbColor;
 
-  static final float SPRING_LENGTH = 50;
+  static final float SPRING_LENGTH = 100;
   static final float SPRING_CONST = 0.005;
   static final float AIR_DAMPING = 0.995;
 
@@ -52,17 +52,20 @@ class Orb {
 
   public PVector calculateSpringForceY(Orb other){
     //f = kx, x is displacement from rest length, k is spring constant
-    PVector force = new PVector(0, SPRING_CONST * (abs(pos.y - SPRING_LENGTH)));
-    force.mult(-1);
+    PVector force = new PVector(0, -SPRING_CONST * (pos.y - SPRING_LENGTH));
     return force;
   }
   
   public void run(){
     vel.add(nextAccel);
     if(!checkInXBound()){
+      if(pos.x < psize / 2f) pos.x = psize / 2f;
+      if(pos.x > width - psize / 2f) pos.x = width - psize / 2f;
       vel.x = -vel.x;
     } 
     if(!checkInYBound()){
+      if(pos.y < psize / 2f) pos.y = psize / 2f;
+      if(pos.y > width - psize / 2f) pos.y = width - psize / 2f;
       vel.y = -vel.y;
     }
     vel.mult(AIR_DAMPING);
