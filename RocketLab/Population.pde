@@ -109,7 +109,7 @@ class Population {
 
   public Individual select() {
     float sumFitness = 0;
-    float aimFitness = random(1, totalFitness);
+    float aimFitness = random(0, totalFitness);
     for (int i = 0; i < pop.length; i++) {
       sumFitness += pop[i].getFitness();
       if (sumFitness >= aimFitness) return pop[i];
