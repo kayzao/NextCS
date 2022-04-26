@@ -121,7 +121,7 @@ class Orb {
   public PVector calculateSpringForceY(Orb other){
     //f = kx, x is displacement from rest length, k is spring constant
     PVector force = new PVector(0, SPRING_CONST * (abs(pos.y - SPRING_LENGTH)));
-    if(other.getY() + SPRING_LENGTH > pos.y) force.mult(-1);
+    force.mult(-1);
     return force;
   }
   
