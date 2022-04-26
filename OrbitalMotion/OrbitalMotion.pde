@@ -1,12 +1,10 @@
 //Constants
 float GRAVITY = 0.1;
 
-Orb orb1;
+Orb orb1, orb2;
 PVector g;
 
 boolean moving;
-
-
 
 void setup() {
   size(800, 400);
@@ -16,7 +14,8 @@ void setup() {
 
 void reset() {
   moving = false;
-  orb1 = new Orb(20, height - 20);
+  orb1 = new Orb(20, 50);
+  orb2 = new Orb(20, 150);
 }//reset
 
 
@@ -26,22 +25,27 @@ void draw() {
     runAStep();
   }
   orb1.display();
-}//draw
+  orb2.display();
+}
 
 void runAStep() {
-    orb1.applyForce(g);
-    orb1.run();
+  orb2.applyForce(g);
+  orb2.applyForce(orb2.calculateSpringForceY(orb1));
+  orb2.run();
 }
 
 void keyPressed() {
   if (key == ' ') {
     moving = !moving;
+    println(moving);
   }
+  /*
   if (key == 'h') {
-    orb1.applyForce(new PVector(6, -6));
+    orb2.applyForce(new PVector(0, -6));
     moving = true;
   }
+  */
   if (key == 'r') {
     reset();
   }
-}//keyPressed
+}
