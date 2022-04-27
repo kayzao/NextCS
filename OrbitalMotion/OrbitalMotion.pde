@@ -9,29 +9,34 @@ boolean moving;
 void setup() {
   size(800, 400);
   g = new PVector(0, GRAVITY);
+  println("================================================================================");
   println("SPACE to enable/disable movement, H to apply a force to the ball, and R to reset");
+  println("================================================================================");
   reset();
 }
 
 void reset() {
   moving = false;
-  orb1 = new Orb(20, 50);
-  orb2 = new Orb(20, 150);
+  orb1 = new Orb(width / 2, height / 2);
+  orb2 = new Orb(int(orb1.getX()), int(orb1.getY()) + 100);
   orb2.setColor(color(255));
   orb1.setColor(color(50, 175, 255));
+  orb1.drawVector(false);
 }
 
 
 void draw() {
   background(255);
   fill(255);
+  strokeWeight(1);
   if (moving) {
     runAStep();
   }
   orb1.display();
   orb2.display();
-  fill(255, 0, 0);  
-  rect(50, 50, 10, orb2.SPRING_LENGTH);
+  fill(255, 0, 0); 
+  strokeWeight(1);
+  rect(orb1.getX() + 20, orb1.getY(), 10, orb2.SPRING_LENGTH);
 }
 
 void runAStep() {

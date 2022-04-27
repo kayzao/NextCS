@@ -26,29 +26,34 @@ boolean moving;
  public void setup() {
   /* size commented out by preprocessor */;
   g = new PVector(0, GRAVITY);
+  println("================================================================================");
   println("SPACE to enable/disable movement, H to apply a force to the ball, and R to reset");
+  println("================================================================================");
   reset();
 }
 
  public void reset() {
   moving = false;
-  orb1 = new Orb(20, 50);
-  orb2 = new Orb(20, 150);
+  orb1 = new Orb(width / 2, height / 2);
+  orb2 = new Orb(PApplet.parseInt(orb1.getX()), PApplet.parseInt(orb1.getY()) + 100);
   orb2.setColor(color(255));
   orb1.setColor(color(50, 175, 255));
+  orb1.drawVector(false);
 }
 
 
  public void draw() {
   background(255);
   fill(255);
+  strokeWeight(1);
   if (moving) {
     runAStep();
   }
   orb1.display();
   orb2.display();
-  fill(255, 0, 0);  
-  rect(50, 50, 10, orb2.SPRING_LENGTH);
+  fill(255, 0, 0); 
+  strokeWeight(1);
+  rect(orb1.getX() + 20, orb1.getY(), 10, orb2.SPRING_LENGTH);
 }
 
  public void runAStep() {
@@ -77,13 +82,15 @@ class Orb {
   private PVector nextAccel; //acceleration for the next tick
   private float psize;
   private int orbColor;
-
+  private boolean drawVector;
   static final float SPRING_LENGTH = 100;
   static final float SPRING_CONST = 0.005f;
   static final float AIR_DAMPING = 0.995f;
+  static final float VECTOR_SIZE = 3;
 
   public Orb(int x, int y){
-    if(psize == 0) psize = 10;
+    if(psize == 0) psize = 20;
+    drawVector = true;
     pos = new PVector(x, y);
     vel = new PVector(0, 0);
     nextAccel = new PVector(0, 0);
@@ -94,6 +101,11 @@ class Orb {
     strokeWeight(1);
     fill(orbColor);
     circle(pos.x, pos.y, psize);
+    if(drawVector){
+      stroke(0);
+      strokeWeight(5);
+      line(pos.x, pos.y, pos.x + vel.x * VECTOR_SIZE , pos.y + vel.y * VECTOR_SIZE);
+    }
   }
 
   public float getY(){
@@ -107,10 +119,15 @@ class Orb {
   public void setSize(float psize){
     this.psize = psize;
   }
+
   public void setColor(int c){
     orbColor = c;
   }
-  
+
+  public void drawVector(boolean b){
+    drawVector = b;
+  }
+
   public void applyForce(PVector f){
     nextAccel.add(f);
   }
@@ -125,20 +142,21 @@ class Orb {
 
   public PVector calculateSpringForceY(Orb other){
     //f = kx, x is displacement from rest length, k is spring constant
-    PVector force = new PVector(0, -SPRING_CONST * (pos.y - SPRING_LENGTH));
+    PVector force = new PVector(0, -SPRING_CONST * (SPRING_LENGTH - abs(other.getY() - pos.y)));
+    if(other.getY() < pos.y) force.mult(-1);
     return force;
   }
   
   public void run(){
     vel.add(nextAccel);
     if(!checkInXBound()){
-      if(pos.x < psize / 2f) pos.x = psize / 2f;
-      if(pos.x > width - psize / 2f) pos.x = width - psize / 2f;
+      if(pos.x < psize / 2f) pos.x += 5;
+      if(pos.x > width - psize / 2f) pos.x -= 5;;
       vel.x = -vel.x;
     } 
     if(!checkInYBound()){
-      if(pos.y < psize / 2f) pos.y = psize / 2f;
-      if(pos.y > width - psize / 2f) pos.y = width - psize / 2f;
+      if(pos.y < psize / 2f) pos.y += 5;
+      if(pos.y > width - psize / 2f) pos.y -= 5;
       vel.y = -vel.y;
     }
     vel.mult(AIR_DAMPING);
