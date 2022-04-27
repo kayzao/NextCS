@@ -51,9 +51,10 @@ boolean moving;
   }
   orb1.display();
   orb2.display();
-  fill(255, 0, 0); 
   strokeWeight(1);
+  fill(255, 0, 0); 
   rect(orb1.getX() + 20, orb1.getY(), 10, orb2.SPRING_LENGTH);
+  rect(orb1.getX() + 20, orb1.getY() - orb2.SPRING_LENGTH, 10, orb2.SPRING_LENGTH);
 }
 
  public void runAStep() {

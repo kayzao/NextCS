@@ -72,13 +72,13 @@ class Orb {
   public void run(){
     vel.add(nextAccel);
     if(!checkInXBound()){
-      if(pos.x < psize / 2f) pos.x += 5;
-      if(pos.x > width - psize / 2f) pos.x -= 5;;
+      if(pos.x < psize / 2f) pos.x = psize / 2f;
+      if(pos.x > width - psize / 2f) pos.x = width - psize / 2f;
       vel.x = -vel.x;
     } 
     if(!checkInYBound()){
-      if(pos.y < psize / 2f) pos.y += 5;
-      if(pos.y > width - psize / 2f) pos.y -= 5;
+      if(pos.y < psize / 2f) pos.y = psize / 2f;
+      if(pos.y > height - psize / 2f) pos.y = height - psize / 2f;
       vel.y = -vel.y;
     }
     vel.mult(AIR_DAMPING);
