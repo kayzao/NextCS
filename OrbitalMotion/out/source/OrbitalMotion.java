@@ -15,7 +15,6 @@ import java.io.IOException;
 
 public class OrbitalMotion extends PApplet {
 
-//Constants
 float GRAVITY = 0.1f;
 
 Orb orb1, orb2;
@@ -27,7 +26,7 @@ boolean moving;
   /* size commented out by preprocessor */;
   g = new PVector(0, GRAVITY);
   println("================================================================================");
-  println("SPACE to enable/disable movement, H to apply a force to the ball, and R to reset");
+  println("SPACE to enable/disable movement, H to apply force based on mouse position, and R to reset");
   println("================================================================================");
   reset();
 }
@@ -68,7 +67,8 @@ boolean moving;
   }
   
   if (key == 'h') {
-    orb2.applyForce(new PVector(6, -6));
+    PVector force = new PVector(pmouseX - orb2.getPos().x, pmouseY - orb2.getPos().y);
+    orb2.applyForce(force.setMag(3));
     moving = true;
   }
 
