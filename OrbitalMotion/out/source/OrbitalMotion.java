@@ -75,7 +75,7 @@ boolean moving;
   if (key == 'h') {
     moving = true;
     orbs[2].applyForce(new PVector((mouseX - orbs[2].getPos().x) * 0.01f, (mouseY - orbs[2].getPos().y) * 0.01f));
-    orbs[1].applyForce(new PVector((mouseX - orbs[1].getPos().x) * 0.01f, (mouseY - orbs[1].getPos().y) * 0.01f));
+    //orbs[1].applyForce(new PVector((mouseX - orbs[1].getPos().x) * 0.01, (mouseY - orbs[1].getPos().y) * 0.01));
   }
 
   if (key == 'r') {
@@ -140,12 +140,10 @@ class OrbNode {
   
   public void connectNext(OrbNode next){
     this.next = next;
-    //next.prev = this;
   }
   
   public void connectPrev(OrbNode prev){
     this.prev = prev;
-    //prev.next = this;
   }
 
   public void applyForce(PVector f){

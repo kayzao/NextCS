@@ -58,7 +58,7 @@ void keyPressed() {
   if (key == 'h') {
     moving = true;
     orbs[2].applyForce(new PVector((mouseX - orbs[2].getPos().x) * 0.01, (mouseY - orbs[2].getPos().y) * 0.01));
-    orbs[1].applyForce(new PVector((mouseX - orbs[1].getPos().x) * 0.01, (mouseY - orbs[1].getPos().y) * 0.01));
+    //orbs[1].applyForce(new PVector((mouseX - orbs[1].getPos().x) * 0.01, (mouseY - orbs[1].getPos().y) * 0.01));
   }
 
   if (key == 'r') {
