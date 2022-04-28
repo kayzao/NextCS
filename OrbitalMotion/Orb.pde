@@ -30,12 +30,8 @@ class Orb {
     }
   }
 
-  public float getY(){
-    return pos.y;
-  }
-
-  public float getX(){
-    return pos.x;
+  public PVector getPos(){
+    return pos;
   }
   
   public void setSize(float psize){
@@ -62,10 +58,10 @@ class Orb {
     return pos.y >= psize / 2f && pos.y <= height - psize / 2f; 
   }
 
-  public PVector calculateSpringForceY(Orb other){
-    //f = kx, x is displacement from rest length, k is spring constant
-    PVector force = new PVector(0, -SPRING_CONST * (SPRING_LENGTH - abs(other.getY() - pos.y)));
-    if(other.getY() < pos.y) force.mult(-1);
+  public PVector calculateSpringForce(Orb other){
+    float displacement = -(pos.dist(other.getPos()) - SPRING_LENGTH);
+    PVector force = new PVector(other.getPos().x - pos.x, other.getPos().y - pos.y);
+    force.setMag(-SPRING_CONST * displacement);
     return force;
   }
   
