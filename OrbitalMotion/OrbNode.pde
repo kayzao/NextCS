@@ -27,12 +27,12 @@ class OrbNode {
       line(pos.x, pos.y, pos.x + vel.x * VECTOR_SIZE , pos.y + vel.y * VECTOR_SIZE);
     }
     if(next != null){
-      stroke(255, 0, 0);
+      stroke(0, 255, 255);
       strokeWeight(2);
-      line(pos.x + 5, pos.y + 5, next.getPos().x, next.getPos().y);
+      line(pos.x + 5, pos.y + 5, next.getPos().x + 5, next.getPos().y + 5);
     }
     if(prev != null){
-      stroke(0, 255, 255);
+      stroke(255, 0, 0);
       strokeWeight(2);
       line(pos.x, pos.y, prev.getPos().x, prev.getPos().y);
     }
@@ -56,12 +56,10 @@ class OrbNode {
   
   public void connectNext(OrbNode next){
     this.next = next;
-    //next.prev = this;
   }
   
   public void connectPrev(OrbNode prev){
     this.prev = prev;
-    //prev.next = this;
   }
 
   public void applyForce(PVector f){
