@@ -50,8 +50,8 @@ void keyPressed() {
   }
   
   if (key == 'h') {
-    PVector force = new PVector(pmouseX - orb2.getPos().x, pmouseY - orb2.getPos().y);
-    orb2.applyForce(force.setMag(3));
+    PVector force = new PVector(mouseX - orb2.getPos().x, mouseY - orb2.getPos().y);
+    orb2.applyForce(force.setMag(dist(mouseX, mouseY, orb2.getPos().x, orb2.getPos().y) / 75f));
     moving = true;
   }
 
