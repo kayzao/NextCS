@@ -17,7 +17,7 @@ public class OrbitalMotion extends PApplet {
 
 float GRAVITY = 0.1f;
 
-Orb orb1, orb2;
+OrbNode orbs[] = new OrbNode[3];
 PVector g;
 
 boolean moving;
@@ -33,11 +33,16 @@ boolean moving;
 
  public void reset() {
   moving = false;
-  orb1 = new Orb(width / 2, height / 2);
-  orb2 = new Orb(PApplet.parseInt(orb1.getPos().x), PApplet.parseInt(orb1.getPos().y) + 100);
-  orb2.setColor(color(255));
-  orb1.setColor(color(50, 175, 255));
-  orb1.drawVector(false);
+  int x = width / 2 - 50;
+  int y = 100;
+  for(int i = 0; i < orbs.length; i++){
+    orbs[i] = new OrbNode(x, y);
+    x += 100;
+    orbs[i].setColor(255);
+  }
+  orbs[1].connectNext(orbs[2]);
+  orbs[1].connectPrev(orbs[0]);
+  orbs[2].connectPrev(orbs[1]);
 }
 
 
@@ -48,17 +53,18 @@ boolean moving;
   if (moving) {
     runAStep();
   }
-  orb1.display();
-  orb2.display();
+  for(OrbNode o : orbs) o.display();
   strokeWeight(1);
   fill(255, 0, 0, 100); 
-  rect(orb1.getPos().x - orb1.SPRING_LENGTH, orb1.getPos().y - orb1.SPRING_LENGTH, orb1.SPRING_LENGTH * 2, orb1.SPRING_LENGTH * 2);
 }
 
  public void runAStep() {
-  orb2.applyForce(g);
-  orb2.applyForce(orb2.calculateSpringForce(orb1));
-  orb2.run();
+  orbs[1].applySpringForce();
+  orbs[1].applyForce(g);
+  orbs[2].applySpringForce();
+  orbs[2].applyForce(g);
+  orbs[1].run();
+  orbs[2].run();
 }
 
  public void keyPressed() {
@@ -67,33 +73,31 @@ boolean moving;
   }
   
   if (key == 'h') {
-    PVector force = new PVector(mouseX - orb2.getPos().x, mouseY - orb2.getPos().y);
-    orb2.applyForce(force.setMag(dist(mouseX, mouseY, orb2.getPos().x, orb2.getPos().y) / 75f));
     moving = true;
+    orbs[2].applyForce(new PVector((mouseX - orbs[2].getPos().x) * 0.01f, (mouseY - orbs[2].getPos().y) * 0.01f));
+    orbs[1].applyForce(new PVector((mouseX - orbs[1].getPos().x) * 0.01f, (mouseY - orbs[1].getPos().y) * 0.01f));
   }
 
   if (key == 'r') {
     reset();
   }
 }
-class Orb {
-  private PVector pos; //position
-  private PVector vel; //velocity
-  private PVector nextAccel; //acceleration for the next tick
+class OrbNode {
+  private PVector pos, vel, nextAccel; //acceleration for the next tick
   private float psize;
   private int orbColor;
   private boolean drawVector;
-  static final float SPRING_LENGTH = 100;
-  static final float SPRING_CONST = 0.005f;
-  static final float AIR_DAMPING = 0.995f;
-  static final float VECTOR_SIZE = 3;
+  private OrbNode next, prev;
+  static final float SPRING_LENGTH = 50, SPRING_CONST = 0.005f, AIR_DAMPING = 0.995f, VECTOR_SIZE = 3;
 
-  public Orb(int x, int y){
+  public OrbNode(int x, int y){
     if(psize == 0) psize = 20;
     drawVector = true;
     pos = new PVector(x, y);
     vel = new PVector(0, 0);
     nextAccel = new PVector(0, 0);
+    next = null;
+    prev = null;
   }
   
   public void display(){
@@ -105,6 +109,16 @@ class Orb {
       stroke(0);
       strokeWeight(5);
       line(pos.x, pos.y, pos.x + vel.x * VECTOR_SIZE , pos.y + vel.y * VECTOR_SIZE);
+    }
+    if(next != null){
+      stroke(255, 0, 0);
+      strokeWeight(2);
+      line(pos.x + 10, pos.y + 10, next.getPos().x, next.getPos().y);
+    }
+    if(prev != null){
+      stroke(0, 255, 255);
+      strokeWeight(2);
+      line(pos.x, pos.y, prev.getPos().x, prev.getPos().y);
     }
   }
 
@@ -123,6 +137,16 @@ class Orb {
   public void drawVector(boolean b){
     drawVector = b;
   }
+  
+  public void connectNext(OrbNode next){
+    this.next = next;
+    //next.prev = this;
+  }
+  
+  public void connectPrev(OrbNode prev){
+    this.prev = prev;
+    //prev.next = this;
+  }
 
   public void applyForce(PVector f){
     nextAccel.add(f);
@@ -135,8 +159,13 @@ class Orb {
   public boolean checkInYBound(){
     return pos.y >= psize / 2f && pos.y <= height - psize / 2f; 
   }
+  
+  public void applySpringForce(){
+    if(next != null) this.applyForce(calculateSpringForce(next));
+    if(prev != null) this.applyForce(calculateSpringForce(prev));
+  }
 
-  public PVector calculateSpringForce(Orb other){
+  private PVector calculateSpringForce(OrbNode other){
     float displacement = -(pos.dist(other.getPos()) - SPRING_LENGTH);
     PVector force = new PVector(other.getPos().x - pos.x, other.getPos().y - pos.y);
     force.setMag(-SPRING_CONST * displacement);

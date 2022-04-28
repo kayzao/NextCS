@@ -1,6 +1,6 @@
 float GRAVITY = 0.1;
 
-Orb orb1, orb2;
+OrbNode orbs[] = new OrbNode[3];
 PVector g;
 
 boolean moving;
@@ -16,11 +16,16 @@ void setup() {
 
 void reset() {
   moving = false;
-  orb1 = new Orb(width / 2, height / 2);
-  orb2 = new Orb(int(orb1.getPos().x), int(orb1.getPos().y) + 100);
-  orb2.setColor(color(255));
-  orb1.setColor(color(50, 175, 255));
-  orb1.drawVector(false);
+  int x = width / 2 - 50;
+  int y = 100;
+  for(int i = 0; i < orbs.length; i++){
+    orbs[i] = new OrbNode(x, y);
+    x += 100;
+    orbs[i].setColor(255);
+  }
+  orbs[1].connectNext(orbs[2]);
+  orbs[1].connectPrev(orbs[0]);
+  orbs[2].connectPrev(orbs[1]);
 }
 
 
@@ -31,17 +36,18 @@ void draw() {
   if (moving) {
     runAStep();
   }
-  orb1.display();
-  orb2.display();
+  for(OrbNode o : orbs) o.display();
   strokeWeight(1);
   fill(255, 0, 0, 100); 
-  rect(orb1.getPos().x - orb1.SPRING_LENGTH, orb1.getPos().y - orb1.SPRING_LENGTH, orb1.SPRING_LENGTH * 2, orb1.SPRING_LENGTH * 2);
 }
 
 void runAStep() {
-  orb2.applyForce(g);
-  orb2.applyForce(orb2.calculateSpringForce(orb1));
-  orb2.run();
+  orbs[1].applySpringForce();
+  orbs[1].applyForce(g);
+  orbs[2].applySpringForce();
+  orbs[2].applyForce(g);
+  orbs[1].run();
+  orbs[2].run();
 }
 
 void keyPressed() {
@@ -50,9 +56,9 @@ void keyPressed() {
   }
   
   if (key == 'h') {
-    PVector force = new PVector(mouseX - orb2.getPos().x, mouseY - orb2.getPos().y);
-    orb2.applyForce(force.setMag(dist(mouseX, mouseY, orb2.getPos().x, orb2.getPos().y) / 75f));
     moving = true;
+    orbs[2].applyForce(new PVector((mouseX - orbs[2].getPos().x) * 0.01, (mouseY - orbs[2].getPos().y) * 0.01));
+    orbs[1].applyForce(new PVector((mouseX - orbs[1].getPos().x) * 0.01, (mouseY - orbs[1].getPos().y) * 0.01));
   }
 
   if (key == 'r') {
