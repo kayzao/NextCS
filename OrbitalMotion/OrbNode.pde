@@ -1,5 +1,5 @@
 class OrbNode {
-  private PVector pos, vel, nextAccel; //acceleration for the next tick
+  private PVector pos, vel, nextAccel;
   private float psize;
   private color orbColor;
   private boolean drawVector;
