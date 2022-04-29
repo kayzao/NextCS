@@ -20,7 +20,7 @@ void reset() {
   int y = 100;
   for(int i = 0; i < orbs.length; i++){
     orbs[i] = new OrbNode(x, y);
-    x += 100;
+    x += 50;
     orbs[i].setColor(255);
   }
   orbs[1].connectNext(orbs[2]);
