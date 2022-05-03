@@ -1,9 +1,10 @@
 class OrbList{
-  private OrbNode startOrb;
+  private OrbNode startOrb, endOrb;
   private int length;
   
   public OrbList(OrbNode startOrb){
     this.startOrb = startOrb;
+    endOrb = startOrb;
     length = 1;
   }
   
@@ -18,7 +19,6 @@ class OrbList{
 
   public void display(){
     OrbNode iter = startOrb;
-    calculateLength();
     for(int i = 0; i < length; i++){
       iter.display();
       if(i < length - 1) iter = iter.getNext();
@@ -35,17 +35,11 @@ class OrbList{
   }
   
   public void append(OrbNode o){
-    OrbNode last = startOrb;
-    for(int i = 1; i < length; i++){
-      last = last.getNext();
-    }
-    if(last == null){
-      println("fuck");
-      return;
-    }
-    o.setPrev(last);
-    o.setNext(null);
-    last.setNext(o);
+    OrbNode prevLast = endOrb;
+    endOrb = o;
+    prevLast.setNext(endOrb);
+    endOrb.setPrev(prevLast);
+    endOrb.setNext(null);
     length ++;
   }
 }
