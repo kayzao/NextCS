@@ -12,8 +12,12 @@ class OrbList{
     endOrb = startOrb;
     length = 1;
   }
+
+  public OrbList(int x, int y){
+    this(new OrbNode(x, y));
+  }
   
-  public void calculateLength(){
+  private void calculateLength(){
     length = 1;
     OrbNode test = startOrb;
     while(test.getNext() != null){
@@ -30,7 +34,14 @@ class OrbList{
     }
   }
   
-  public void addFront(OrbNode o){
+  public void addFront(int x, int y){
+    OrbNode o = new OrbNode(x, y);
+    if(length == 0){
+      this.startOrb = startOrb;
+      endOrb = startOrb;
+      length = 1;
+      return;
+    }
     OrbNode prevStart = startOrb;
     startOrb = o;
     startOrb.setNext(prevStart);
@@ -39,12 +50,47 @@ class OrbList{
     length++;
   }
   
-  public void append(OrbNode o){
+  public void append(int x, int y){
+    OrbNode o = new OrbNode(x, y);
+    if(length == 0){
+      this.startOrb = startOrb;
+      endOrb = startOrb;
+      length = 1;
+      return;
+    }
     OrbNode prevLast = endOrb;
     endOrb = o;
     prevLast.setNext(endOrb);
     endOrb.setPrev(prevLast);
     endOrb.setNext(null);
     length ++;
+  }
+
+  public void run(){
+    OrbNode iter = startOrb;
+    for(int i = 0; i < length; i++){
+      iter.run();
+      if(i < length - 1) iter = iter.getNext();
+    }
+  }
+  
+  public void applySprings(){
+    OrbNode iter = startOrb;
+    for(int i = 0; i < length; i++){
+      iter.applySpringForce();
+      if(i < length - 1) iter = iter.getNext();
+    }
+  }
+
+  public void applyForceAll(PVector force){
+    OrbNode iter = startOrb;
+    for(int i = 0; i < length; i++){
+      iter.applyForce(force);
+      if(i < length - 1) iter = iter.getNext();
+    }
+  }
+
+  public void applyForceEnd(PVector force){
+    endOrb.applyForce(force);
   }
 }

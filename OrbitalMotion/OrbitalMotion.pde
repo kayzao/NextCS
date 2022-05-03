@@ -19,10 +19,10 @@ void reset() {
   
   int x = width / 2 - 50;
   int y = 200;
-  orbs = new OrbList(new OrbNode(x, y));
+  orbs = new OrbList(x, y);
   x += 50;
   for(int i = 1; i < 3; i++){
-    orbs.append(new OrbNode(x, y));
+    orbs.append(x, y);
     x += 50;
   }
 }
@@ -41,6 +41,8 @@ void draw() {
 }
 
 void runAStep() {
+  orbs.applySprings();
+  orbs.run();
 }
 
 void keyPressed() {
