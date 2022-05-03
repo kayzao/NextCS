@@ -2,6 +2,11 @@ class OrbList{
   private OrbNode startOrb, endOrb;
   private int length;
   
+  public OrbList(){
+    this(null);
+    length = 0;
+  }
+
   public OrbList(OrbNode startOrb){
     this.startOrb = startOrb;
     endOrb = startOrb;
