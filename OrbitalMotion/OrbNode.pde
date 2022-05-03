@@ -14,6 +14,7 @@ class OrbNode {
     nextAccel = new PVector(0, 0);
     next = null;
     prev = null;
+    orbColor = color(255);
   }
   
   public void display(){
@@ -42,6 +43,14 @@ class OrbNode {
     return pos;
   }
   
+  public OrbNode getNext(){
+    return next;
+  }
+  
+  public OrbNode getPrev(){
+    return prev;
+  }
+  
   public void setSize(float psize){
     this.psize = psize;
   }
@@ -54,11 +63,11 @@ class OrbNode {
     drawVector = b;
   }
   
-  public void connectNext(OrbNode next){
+  public void setNext(OrbNode next){
     this.next = next;
   }
   
-  public void connectPrev(OrbNode prev){
+  public void setPrev(OrbNode prev){
     this.prev = prev;
   }
 
