@@ -1,8 +1,6 @@
-float GRAVITY = 0.1;
-
+final float GRAVITY = 0.1;
 OrbList orbs;
 PVector g;
-
 boolean moving, gravity;
 
 void setup() {

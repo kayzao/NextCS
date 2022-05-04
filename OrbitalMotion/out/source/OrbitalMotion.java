@@ -15,11 +15,9 @@ import java.io.IOException;
 
 public class OrbitalMotion extends PApplet {
 
-float GRAVITY = 0.1f;
-
+final float GRAVITY = 0.1f;
 OrbList orbs;
 PVector g;
-
 boolean moving, gravity;
 
  public void setup() {
