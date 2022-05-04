@@ -3,22 +3,22 @@ float GRAVITY = 0.1;
 OrbList orbs;
 PVector g;
 
-boolean moving;
+boolean moving, gravity;
 
 void setup() {
   size(800, 400);
   g = new PVector(0, GRAVITY);
   println("==========================================================================================");
-  println("SPACE to enable/disable movement, H to apply force based on mouse position, and R to reset");
+  println("SPACE to enable/disable movement, H to apply force, G to toggle gravity, and R to reset");
   println("==========================================================================================");
   reset();
 }
 
 void reset() {
   moving = false;
-  
+  gravity = true;
   int x = width / 2 - 50;
-  int y = 200;
+  int y = 100;
   orbs = new OrbList(x, y);
   x += 50;
   for(int i = 1; i < 3; i++){
@@ -38,10 +38,15 @@ void draw() {
   strokeWeight(1);
   fill(255, 0, 0, 100); 
   orbs.display();
+
+  fill(0);
+  text("Movement: " + (moving ? "ENABLED" : "DISABLED"), 10, 20);
+  text("Gravity: " + (gravity ? "ENABLED" : "DISABLED"), 10, 30);
 }
 
 void runAStep() {
-  orbs.applySprings();
+  orbs.applySprings(1);
+  if(gravity) orbs.applyForce(g, 1);
   orbs.run();
 }
 
@@ -52,7 +57,11 @@ void keyPressed() {
   
   if (key == 'h') {
     moving = true;
-    //orbs[1].applyForce(new PVector((mouseX - orbs[1].getPos().x) * 0.01, (mouseY - orbs[1].getPos().y) * 0.01));
+    orbs.applyForce(new PVector((mouseX - orbs.getPosOrb(2).x) * 0.01, (mouseY - orbs.getPosOrb(2).y) * 0.01), 2);
+  }
+
+  if(key == 'g') {
+    gravity = !gravity;
   }
 
   if (key == 'r') {

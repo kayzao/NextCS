@@ -16,6 +16,14 @@ class OrbList{
   public OrbList(int x, int y){
     this(new OrbNode(x, y));
   }
+
+  public PVector getPosOrb(int n){
+    OrbNode current = startOrb;
+    for(int i = 0; i < n; i++){
+      current = current.getNext();
+    }
+    return current.getPos();
+  }
   
   private void calculateLength(){
     length = 1;
@@ -74,9 +82,13 @@ class OrbList{
     }
   }
   
-  public void applySprings(){
+  public void applySprings(int start){
     OrbNode iter = startOrb;
     for(int i = 0; i < length; i++){
+      if(i < start){
+        iter = iter.getNext();
+        continue;
+      }
       iter.applySpringForce();
       if(i < length - 1) iter = iter.getNext();
     }
@@ -90,7 +102,15 @@ class OrbList{
     }
   }
 
-  public void applyForceEnd(PVector force){
-    endOrb.applyForce(force);
+  public void applyForce(PVector force, int start){
+    OrbNode iter = startOrb;
+    for(int i = 0; i < length; i++){
+      if(i < start){
+        iter = iter.getNext();
+        continue;
+      }
+      iter.applyForce(force);
+      if(i < length - 1) iter = iter.getNext();
+    }
   }
 }

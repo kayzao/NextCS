@@ -28,7 +28,7 @@ class OrbNode {
       line(pos.x, pos.y, pos.x + vel.x * VECTOR_SIZE , pos.y + vel.y * VECTOR_SIZE);
     }
     if(next != null){
-      stroke(0, 255, 255);
+      stroke(20, 100, 255);
       strokeWeight(2);
       line(pos.x + 5, pos.y + 5, next.getPos().x + 5, next.getPos().y + 5);
     }
