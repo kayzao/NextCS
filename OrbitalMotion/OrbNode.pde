@@ -4,10 +4,10 @@ class OrbNode {
   private color orbColor;
   private boolean drawVector;
   private OrbNode next, prev;
-  static final float SPRING_LENGTH = 50, SPRING_CONST = 0.005, AIR_DAMPING = 0.995, VECTOR_SIZE = 3;
+  static final float SPRING_LENGTH = 10, SPRING_CONST = 0.1, AIR_DAMPING = 0.995, VECTOR_SIZE = 3;
 
-  public OrbNode(int x, int y){
-    if(psize == 0) psize = 20;
+  public OrbNode(int x, int y) {
+    if (psize == 0) psize = 20;
     drawVector = true;
     pos = new PVector(x, y);
     vel = new PVector(0, 0);
@@ -16,95 +16,95 @@ class OrbNode {
     prev = null;
     orbColor = color(255);
   }
-  
-  public void display(){
+
+  public void display() {
     stroke(0);
     strokeWeight(1);
     fill(orbColor);
     circle(pos.x, pos.y, psize);
-    if(drawVector){
+    if (drawVector) {
       stroke(0);
       strokeWeight(5);
-      line(pos.x, pos.y, pos.x + vel.x * VECTOR_SIZE , pos.y + vel.y * VECTOR_SIZE);
+      line(pos.x, pos.y, pos.x + vel.x * VECTOR_SIZE, pos.y + vel.y * VECTOR_SIZE);
     }
-    if(next != null){
+    if (next != null) {
       stroke(20, 100, 255);
       strokeWeight(2);
       line(pos.x + 5, pos.y + 5, next.getPos().x + 5, next.getPos().y + 5);
     }
-    if(prev != null){
+    if (prev != null) {
       stroke(255, 0, 0);
       strokeWeight(2);
       line(pos.x, pos.y, prev.getPos().x, prev.getPos().y);
     }
   }
 
-  public PVector getPos(){
+  public PVector getPos() {
     return pos;
   }
-  
-  public OrbNode getNext(){
+
+  public OrbNode getNext() {
     return next;
   }
-  
-  public OrbNode getPrev(){
+
+  public OrbNode getPrev() {
     return prev;
   }
-  
-  public void setSize(float psize){
+
+  public void setSize(float psize) {
     this.psize = psize;
   }
 
-  public void setColor(color c){
+  public void setColor(color c) {
     orbColor = c;
   }
 
-  public void drawVector(boolean b){
+  public void drawVector(boolean b) {
     drawVector = b;
   }
-  
-  public void setNext(OrbNode next){
+
+  public void setNext(OrbNode next) {
     this.next = next;
   }
-  
-  public void setPrev(OrbNode prev){
+
+  public void setPrev(OrbNode prev) {
     this.prev = prev;
   }
 
-  public void applyForce(PVector f){
+  public void applyForce(PVector f) {
     nextAccel.add(f);
   }
-  
-  public boolean checkInXBound(){
-    return pos.x >= psize / 2f && pos.x <= width - psize / 2f; 
-  }
-  
-  public boolean checkInYBound(){
-    return pos.y >= psize / 2f && pos.y <= height - psize / 2f; 
-  }
-  
-  public void applySpringForce(){
-    if(next != null) this.applyForce(calculateSpringForce(next));
-    if(prev != null) this.applyForce(calculateSpringForce(prev));
+
+  public boolean checkInXBound() {
+    return pos.x >= psize / 2f && pos.x <= width - psize / 2f;
   }
 
-  private PVector calculateSpringForce(OrbNode other){
+  public boolean checkInYBound() {
+    return pos.y >= psize / 2f && pos.y <= height - psize / 2f;
+  }
+
+  public void applySpringForce() {
+    if (next != null) this.applyForce(calculateSpringForce(next));
+    if (prev != null) this.applyForce(calculateSpringForce(prev));
+  }
+
+  private PVector calculateSpringForce(OrbNode other) {
     float displacement = -(pos.dist(other.getPos()) - SPRING_LENGTH);
     PVector force = new PVector(other.getPos().x - pos.x, other.getPos().y - pos.y);
     force.setMag(-SPRING_CONST * displacement);
     return force;
   }
-  
-  public void run(){
+
+  public void run() {
     vel.add(nextAccel);
-    if(!checkInXBound()){
-      if(pos.x < psize / 2f) pos.x = psize / 2f;
-      if(pos.x > width - psize / 2f) pos.x = width - psize / 2f;
+    if (!checkInXBound()) {
+      if (pos.x < psize / 2f) pos.x = psize / 2f;
+      if (pos.x > width - psize / 2f) pos.x = width - psize / 2f;
       vel.x = -vel.x;
-    } 
-    if(!checkInYBound()){
-      if(pos.y < psize / 2f) pos.y = psize / 2f;
-      if(pos.y > height - psize / 2f) pos.y = height - psize / 2f;
+    }
+    if (!checkInYBound()) {
+      if (pos.y < psize / 2f) pos.y = psize / 2f;
+      if (pos.y > height - psize / 2f) pos.y = height - psize / 2f;
       vel.y = -vel.y;
     }
     vel.mult(AIR_DAMPING);

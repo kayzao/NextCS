@@ -17,12 +17,18 @@ void reset() {
   gravity = true;
   int x = width / 2 - 50;
   int y = 100;
-  orbs = new OrbList(x, y);
-  x += 50;
-  for(int i = 1; i < 3; i++){
-    orbs.append(x, y);
-    x += 50;
+  orbs = new OrbList();
+  orbs.append(new FixedOrbNode(x, y));
+  x += OrbNode.SPRING_LENGTH;
+  for (int i = 1; i < 20; i++) {
+    orbs.append(new OrbNode(x, y));
+    x += OrbNode.SPRING_LENGTH;
+    if(i == 10){
+      orbs.append(new FixedOrbNode(x, y));
+      x+= OrbNode.SPRING_LENGTH;
+    }
   }
+  orbs.append(new FixedOrbNode(x, y));
 }
 
 
@@ -34,7 +40,7 @@ void draw() {
     runAStep();
   }
   strokeWeight(1);
-  fill(255, 0, 0, 100); 
+  fill(255, 0, 0, 100);
   orbs.display();
 
   fill(0);
@@ -43,8 +49,8 @@ void draw() {
 }
 
 void runAStep() {
-  orbs.applySprings(1);
-  if(gravity) orbs.applyForce(g, 1);
+  orbs.applySprings();
+  if (gravity) orbs.applyForce(g);
   orbs.run();
 }
 
@@ -52,13 +58,13 @@ void keyPressed() {
   if (key == ' ') {
     moving = !moving;
   }
-  
+
   if (key == 'h') {
     moving = true;
-    orbs.applyForce(new PVector((mouseX - orbs.getPosOrb(2).x) * 0.01, (mouseY - orbs.getPosOrb(2).y) * 0.01), 2);
+    orbs.applyForce(new PVector((mouseX - orbs.getPosOrb(2).x) * 0.01, (mouseY - orbs.getPosOrb(2).y) * 0.01));
   }
 
-  if(key == 'g') {
+  if (key == 'g') {
     gravity = !gravity;
   }
 
