@@ -25,6 +25,10 @@ class OrbList {
     return current.getPos();
   }
 
+  public int getLength(){
+    return length;
+  }
+
   public void display() {
     OrbNode iter = startOrb;
     for (int i = 0; i < length; i++) {
@@ -48,7 +52,13 @@ class OrbList {
     length++;
   }
 
-  public void append(OrbNode o) {
+  public void append(int x, int y, boolean fixed) {
+    OrbNode o;
+    if(fixed){
+      o = new FixedOrbNode(x, y);
+    } else {
+      o = new OrbNode(x, y);
+    }
     if (length == 0) {
       this.startOrb = o;
       endOrb = startOrb;

@@ -15,20 +15,20 @@ void setup() {
 void reset() {
   moving = false;
   gravity = true;
-  int x = width / 2 - 50;
+  int x = width / 2 - 300;
   int y = 100;
   orbs = new OrbList();
-  orbs.append(new FixedOrbNode(x, y));
+  orbs.append(x, y, true);
   x += OrbNode.SPRING_LENGTH;
   for (int i = 1; i < 20; i++) {
-    orbs.append(new OrbNode(x, y));
+    orbs.append(x, y, false);
     x += OrbNode.SPRING_LENGTH;
-    if(i == 10){
-      orbs.append(new FixedOrbNode(x, y));
+    if(i % 5 == 0){
+      orbs.append(x, y, true);
       x+= OrbNode.SPRING_LENGTH;
     }
   }
-  orbs.append(new FixedOrbNode(x, y));
+  orbs.append(x, y, true);
 }
 
 
@@ -61,7 +61,7 @@ void keyPressed() {
 
   if (key == 'h') {
     moving = true;
-    orbs.applyForce(new PVector((mouseX - orbs.getPosOrb(2).x) * 0.01, (mouseY - orbs.getPosOrb(2).y) * 0.01));
+    orbs.applyForce(new PVector((mouseX - orbs.getPosOrb(orbs.getLength() / 2).x) * 0.01, (mouseY - orbs.getPosOrb(orbs.getLength() / 2).y) * 0.01));
   }
 
   if (key == 'g') {

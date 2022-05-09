@@ -4,7 +4,7 @@ class OrbNode {
   private color orbColor;
   private boolean drawVector;
   private OrbNode next, prev;
-  static final float SPRING_LENGTH = 10, SPRING_CONST = 0.1, AIR_DAMPING = 0.995, VECTOR_SIZE = 3;
+  static final float SPRING_LENGTH = 20, SPRING_CONST = 0.1, AIR_DAMPING = 0.995, VECTOR_SIZE = 3;
 
   public OrbNode(int x, int y) {
     if (psize == 0) psize = 20;

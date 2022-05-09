@@ -32,20 +32,20 @@ boolean moving, gravity;
  public void reset() {
   moving = false;
   gravity = true;
-  int x = width / 2 - 50;
+  int x = width / 2 - 300;
   int y = 100;
   orbs = new OrbList();
-  orbs.append(new FixedOrbNode(x, y));
+  orbs.append(x, y, true);
   x += OrbNode.SPRING_LENGTH;
   for (int i = 1; i < 20; i++) {
-    orbs.append(new OrbNode(x, y));
+    orbs.append(x, y, false);
     x += OrbNode.SPRING_LENGTH;
-    if(i == 10){
-      orbs.append(new FixedOrbNode(x, y));
+    if(i % 5 == 0){
+      orbs.append(x, y, true);
       x+= OrbNode.SPRING_LENGTH;
     }
   }
-  orbs.append(new FixedOrbNode(x, y));
+  orbs.append(x, y, true);
 }
 
 
@@ -78,7 +78,7 @@ boolean moving, gravity;
 
   if (key == 'h') {
     moving = true;
-    orbs.applyForce(new PVector((mouseX - orbs.getPosOrb(2).x) * 0.01f, (mouseY - orbs.getPosOrb(2).y) * 0.01f));
+    orbs.applyForce(new PVector((mouseX - orbs.getPosOrb(orbs.getLength() / 2).x) * 0.01f, (mouseY - orbs.getPosOrb(orbs.getLength() / 2).y) * 0.01f));
   }
 
   if (key == 'g') {
@@ -125,6 +125,10 @@ class OrbList {
     return current.getPos();
   }
 
+  public int getLength(){
+    return length;
+  }
+
   public void display() {
     OrbNode iter = startOrb;
     for (int i = 0; i < length; i++) {
@@ -148,7 +152,13 @@ class OrbList {
     length++;
   }
 
-  public void append(OrbNode o) {
+  public void append(int x, int y, boolean fixed) {
+    OrbNode o;
+    if(fixed){
+      o = new FixedOrbNode(x, y);
+    } else {
+      o = new OrbNode(x, y);
+    }
     if (length == 0) {
       this.startOrb = o;
       endOrb = startOrb;
@@ -193,7 +203,7 @@ class OrbNode {
   private int orbColor;
   private boolean drawVector;
   private OrbNode next, prev;
-  static final float SPRING_LENGTH = 10, SPRING_CONST = 0.1f, AIR_DAMPING = 0.995f, VECTOR_SIZE = 3;
+  static final float SPRING_LENGTH = 20, SPRING_CONST = 0.1f, AIR_DAMPING = 0.995f, VECTOR_SIZE = 3;
 
   public OrbNode(int x, int y) {
     if (psize == 0) psize = 20;
