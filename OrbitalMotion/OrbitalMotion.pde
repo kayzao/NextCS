@@ -18,11 +18,6 @@
   provided in mousePressed.
   =====================*/
 
-/*=====================
-  Mode constants
-  See keyPressed and mousePressed for
-  intended behavior based on modes.
-  =====================*/
 int DELETE_MODE = 0;
 int GROW_MODE = 1;
 int SHRINK_MODE = 2;
@@ -34,16 +29,14 @@ OrbList slinky;
 float GRAVITY = 0.2;
 PVector g;
 
-/*=====================
-  setup and draw should be left unmodified.
-  =====================*/
 void setup() {
   size(500, 500);
   clickMode = DELETE_MODE;
   moving = false;
   g = new PVector(0, GRAVITY);
   makeSlinky(2, 100);
-}//setup
+}
+
 void draw() {
   background(255);
   if (moving) {
@@ -53,8 +46,7 @@ void draw() {
   }
   slinky.display();
   displayMode();
-}//draw
-
+}
 
 /*=====================
   makeSlinky(int numParts, int y)
@@ -73,8 +65,8 @@ void draw() {
   sentinel nodes.
   =====================*/
 void makeSlinky(int numParts, int y) {
-
-}//makeSlinky
+  OrbList orbs = new Orblist();
+}
 
 /*=====================
   keyPressed
@@ -88,8 +80,16 @@ void makeSlinky(int numParts, int y) {
       back to DELETE_MODE and so on.
   =====================*/
 void keyPressed() {
-
-}//keyPressed
+  if(key == ' ') {
+    moving = !moving;
+  }
+  if(key == 'r') {
+    makeSlinky(2, mouseY);
+  }
+  if(key == 'm') {
+    clickMode = (clickMode + 1) % 4;
+  }
+}
 
 
 /*=====================
@@ -118,7 +118,11 @@ void keyPressed() {
     SHRINK_MODE: Decrease the size of the orb by 1.
   =====================*/
 void mousePressed() {
-
+  if(detectMouse() == -1){ //mouse is not over orb
+    if(mouseX > width/2) {
+      orbs.append(x, y, false);
+    }
+  }
 }//mousePressed
 
 /*=====================

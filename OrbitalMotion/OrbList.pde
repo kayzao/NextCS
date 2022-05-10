@@ -1,23 +1,7 @@
-/*=====================
-  OrbList class
+public class OrbList {
 
-  The main strcutrual change between this
-  class and the one developed in class is
-  that this class will always have FixedOrb
-  objects at front and back. Placeholder nodes
-  like this are sometimes referred to as
-  "Sentinel" nodes.
-
-  Sentinel nodes are sometimes used in linked
-  lists because they gaurantee that the list
-  will never be empty. This removes the need
-  for special cases in methods like addFront,
-  append and remove.
-  =====================*/
-class OrbList {
-
-  OrbNode front;
-  OrbNode back;
+  private OrbNode front;
+  private OrbNode back;
 
   /*=====================
     Constructor
@@ -27,9 +11,12 @@ class OrbList {
     Set back to the orb at (x1, y1).
     Connect front and back accordingly.
     =====================*/
-  OrbList(int x0, int y0, int x1, int y1) {
-
-  }//constructor
+  public OrbList(int x0, int y0, int x1, int y1) {
+    front = new FixedOrbNode(x0, y0);
+    back = new FixedOrbNode(x1, y1);
+    front.setNext(back);
+    back.setPrev(front);
+  }
 
   /*=====================
     addFront(int x, int y, boolean fixed)
@@ -41,9 +28,9 @@ class OrbList {
     the sentinel node (see explanation at the
     top of this file).
     =====================*/
-  void addFront(int x, int y, boolean fixed) {
+  public void addFront(int x, int y, boolean fixed) {
 
-  }//addFront
+  }
 
   /*=====================
     append(int x, int y, boolean fixed)
@@ -55,9 +42,9 @@ class OrbList {
     the sentinel node (see explanation at the
     top of this file).
     =====================*/
-  void append(int x, int y, boolean fixed) {
+  public void append(int x, int y, boolean fixed) {
 
-  }//append
+  }
 
 
   /*=====================
@@ -68,9 +55,9 @@ class OrbList {
     Remove pn from the list by changing the
     appropriate links.
     =====================*/
-  void removeNode(OrbNode pn) {
+  public void removeNode(OrbNode pn) {
 
-  }//removeNode
+  }
 
 
   /*=====================
@@ -83,50 +70,57 @@ class OrbList {
 
     In all other cases, return null.
     =====================*/
-  OrbNode selectNode(int x, int y) {
+  public OrbNode selectNode(int x, int y) {
 
     return null;
-  }//selectNode
+  }
 
-
-/*=====================
-  The methods below are exactly as they
-  have been developed in class already.
-  You do not need to modify them.
-  =====================*/
-  void display() {
+  public void display() {
     OrbNode current = front;
     while (current != null) {
       current.display();
       current = current.next;
     }
-  }//display
+  }
 
-  void applySprings() {
+  public void applySprings() {
     OrbNode current = front;
     while (current != null) {
       current.applySpringForce();
       current = current.next;
     }
-  }//applySprings
+  }
 
-  void applyExternalForce(PVector force) {
+  public void applyExternalForce(PVector force) {
     OrbNode current = front;
     while (current != null) {
       current.applyForce(force);
       current = current.next;
     }
-  }//applyExternalForce
+  }
 
-  void run() {
+  public int detectMouse(){
+    OrbNode current = front.getNext();
+    int index = 1;
+    while(current.getNext() != null){ //while current is not the back sentinel
+      if(current.contains(new PVector(mouseX, mouseY))){
+        return index;
+      }
+      index++;
+      current = current.getNext();
+    }
+    return -1;
+  }
+
+  public void run() {
     OrbNode current = front;
     while (current != null) {
       current.run();
       current = current.next;
     }
-  }//run
+  }
 
-  String toString() {
+  public String toString() {
     String s = "";
     OrbNode current = front;
     while (current != null) {
@@ -134,6 +128,6 @@ class OrbList {
       current = current.next;
     }
     return s;
-  }//toString
+  }
 
-}//ParticeList
+}
