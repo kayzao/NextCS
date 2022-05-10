@@ -50,7 +50,7 @@ void draw() {
 
 void runAStep() {
   orbs.applySprings();
-  if (gravity) orbs.applyForce(g);
+  if (gravity) orbs.applyExternalForce(g);
   orbs.run();
 }
 
@@ -61,7 +61,7 @@ void keyPressed() {
 
   if (key == 'h') {
     moving = true;
-    orbs.applyForce(new PVector((mouseX - orbs.getPosOrb(orbs.getLength() / 2).x) * 0.01, (mouseY - orbs.getPosOrb(orbs.getLength() / 2).y) * 0.01));
+    orbs.applyExternalForce(new PVector((mouseX - orbs.getPosOrb(orbs.getLength() / 2).x) * 0.01, (mouseY - orbs.getPosOrb(orbs.getLength() / 2).y) * 0.01));
   }
 
   if (key == 'g') {

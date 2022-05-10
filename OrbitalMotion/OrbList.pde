@@ -37,7 +37,13 @@ class OrbList {
     }
   }
 
-  public void addFront(OrbNode o) {
+  public void addFront(int x, int y, boolean fixed) {
+    OrbNode o;
+    if(fixed){
+      o = new FixedOrbNode(x, y);
+    } else {
+      o = new OrbNode(x, y);
+    }
     if (length == 0) {
       this.startOrb = o;
       endOrb = startOrb;
@@ -89,7 +95,7 @@ class OrbList {
     }
   }
 
-  public void applyForce(PVector force) {
+  public void applyExternalForce(PVector force) {
     OrbNode iter = startOrb;
     for (int i = 0; i < length; i++) {
       iter.applyForce(force);
