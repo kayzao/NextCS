@@ -1,105 +1,139 @@
+/*=====================
+  OrbList class
+
+  The main strcutrual change between this
+  class and the one developed in class is
+  that this class will always have FixedOrb
+  objects at front and back. Placeholder nodes
+  like this are sometimes referred to as
+  "Sentinel" nodes.
+
+  Sentinel nodes are sometimes used in linked
+  lists because they gaurantee that the list
+  will never be empty. This removes the need
+  for special cases in methods like addFront,
+  append and remove.
+  =====================*/
 class OrbList {
-  private OrbNode startOrb, endOrb;
-  private int length;
 
-  public OrbList() {
-    this(null);
-    length = 0;
-  }
+  OrbNode front;
+  OrbNode back;
 
-  public OrbList(OrbNode startOrb) {
-    this.startOrb = startOrb;
-    endOrb = startOrb;
-    length = 1;
-  }
+  /*=====================
+    Constructor
 
-  public OrbList(int x, int y) {
-    this(new OrbNode(x, y));
-  }
+    Create FixedOrbs at (x0, y0) and (x1, y1).
+    Set front to the orb at (x0, y0).
+    Set back to the orb at (x1, y1).
+    Connect front and back accordingly.
+    =====================*/
+  OrbList(int x0, int y0, int x1, int y1) {
 
-  public PVector getPosOrb(int n) {
-    OrbNode current = startOrb;
-    for (int i = 0; i < n; i++) {
-      current = current.getNext();
+  }//constructor
+
+  /*=====================
+    addFront(int x, int y, boolean fixed)
+
+    Create a new OrbNode at (x, y), if fixed
+    is true, make that orb a FixedOrd.
+
+    Add the new OrbNode to the front, AFTER
+    the sentinel node (see explanation at the
+    top of this file).
+    =====================*/
+  void addFront(int x, int y, boolean fixed) {
+
+  }//addFront
+
+  /*=====================
+    append(int x, int y, boolean fixed)
+
+    Create a new OrbNode at (x, y), if fixed
+    is true, make that orb a FixedOrd.
+
+    Add the new OrbNode to the back, BEFORE
+    the sentinel node (see explanation at the
+    top of this file).
+    =====================*/
+  void append(int x, int y, boolean fixed) {
+
+  }//append
+
+
+  /*=====================
+    removeNode(OrbNode pn)
+
+    Assume that pn is an OrbNode in this list.
+
+    Remove pn from the list by changing the
+    appropriate links.
+    =====================*/
+  void removeNode(OrbNode pn) {
+
+  }//removeNode
+
+
+  /*=====================
+    selectNode(int x, int y)
+
+    If (x, y) is a position inside a NON
+    SENTINEL node in this list (as defined
+    by the constains()method in OrbNode),
+    return a reference to that node.
+
+    In all other cases, return null.
+    =====================*/
+  OrbNode selectNode(int x, int y) {
+
+    return null;
+  }//selectNode
+
+
+/*=====================
+  The methods below are exactly as they
+  have been developed in class already.
+  You do not need to modify them.
+  =====================*/
+  void display() {
+    OrbNode current = front;
+    while (current != null) {
+      current.display();
+      current = current.next;
     }
-    return current.getPos();
-  }
+  }//display
 
-  public int getLength(){
-    return length;
-  }
+  void applySprings() {
+    OrbNode current = front;
+    while (current != null) {
+      current.applySpringForce();
+      current = current.next;
+    }
+  }//applySprings
 
-  public void display() {
-    OrbNode iter = startOrb;
-    for (int i = 0; i < length; i++) {
-      iter.display();
-      if (i < length - 1) iter = iter.getNext();
+  void applyExternalForce(PVector force) {
+    OrbNode current = front;
+    while (current != null) {
+      current.applyForce(force);
+      current = current.next;
     }
-  }
+  }//applyExternalForce
 
-  public void addFront(int x, int y, boolean fixed) {
-    OrbNode o;
-    if(fixed){
-      o = new FixedOrbNode(x, y);
-    } else {
-      o = new OrbNode(x, y);
+  void run() {
+    OrbNode current = front;
+    while (current != null) {
+      current.run();
+      current = current.next;
     }
-    if (length == 0) {
-      this.startOrb = o;
-      endOrb = startOrb;
-      length = 1;
-      return;
-    }
-    OrbNode prevStart = startOrb;
-    startOrb = o;
-    startOrb.setNext(prevStart);
-    startOrb.setPrev(null);
-    prevStart.setPrev(startOrb);
-    length++;
-  }
+  }//run
 
-  public void append(int x, int y, boolean fixed) {
-    OrbNode o;
-    if(fixed){
-      o = new FixedOrbNode(x, y);
-    } else {
-      o = new OrbNode(x, y);
+  String toString() {
+    String s = "";
+    OrbNode current = front;
+    while (current != null) {
+      s+= current;
+      current = current.next;
     }
-    if (length == 0) {
-      this.startOrb = o;
-      endOrb = startOrb;
-      length = 1;
-      return;
-    }
-    OrbNode prevLast = endOrb;
-    endOrb = o;
-    prevLast.setNext(endOrb);
-    endOrb.setPrev(prevLast);
-    endOrb.setNext(null);
-    length ++;
-  }
+    return s;
+  }//toString
 
-  public void run() {
-    OrbNode iter = startOrb;
-    for (int i = 0; i < length; i++) {
-      iter.run();
-      if (i < length - 1) iter = iter.getNext();
-    }
-  }
-
-  public void applySprings() {
-    OrbNode iter = startOrb;
-    for (int i = 0; i < length; i++) {
-      iter.applySpringForce();
-      if (i < length - 1) iter = iter.getNext();
-    }
-  }
-
-  public void applyExternalForce(PVector force) {
-    OrbNode iter = startOrb;
-    for (int i = 0; i < length; i++) {
-      iter.applyForce(force);
-      if (i < length - 1) iter = iter.getNext();
-    }
-  }
-}
+}//ParticeList

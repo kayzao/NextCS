@@ -1,114 +1,123 @@
+/*=====================
+  This class does not need to be modified.
+
+  It is the same OrbNode class we've been working on with
+  2 important changes.
+
+  0) There is now a concept of mass applied in run()
+     Mass is determined as osize/PART_SIZE.
+      When an OrbNode is made, it has a mass of 1.
+    There is a method embiggen(f) which will add f
+    to osize.
+    You will use embiggen in the main drive file.
+
+  1) There is a method contains(p) which takes a
+     PVector and returns true if p is inside the
+     OrbNode
+  =====================*/
 class OrbNode {
-  private PVector pos, vel, nextAccel;
-  private float psize;
-  private color orbColor;
-  private boolean drawVector;
-  private OrbNode next, prev;
-  static final float SPRING_LENGTH = 20, SPRING_CONST = 0.1, AIR_DAMPING = 0.995, VECTOR_SIZE = 3;
 
-  public OrbNode(int x, int y) {
-    if (psize == 0) psize = 20;
-    drawVector = true;
-    pos = new PVector(x, y);
-    vel = new PVector(0, 0);
-    nextAccel = new PVector(0, 0);
-    next = null;
-    prev = null;
-    orbColor = color(255);
-  }
+  static final float SPRING_LEN = 50;
+  static final float SPRING_CONST = 0.005;
+  static final float DAMPING = 0.995; //1 is no damping, lower numbers is more aggressive damping
+  static final int PART_SIZE = 15;
 
-  public void display() {
-    stroke(0);
-    strokeWeight(1);
-    fill(orbColor);
-    circle(pos.x, pos.y, psize);
-    if (drawVector) {
-      stroke(0);
-      strokeWeight(5);
-      line(pos.x, pos.y, pos.x + vel.x * VECTOR_SIZE, pos.y + vel.y * VECTOR_SIZE);
+  PVector position;
+  PVector velocity;
+  PVector acceleration;
+  int osize;
+  float mass;
+  color c;
+
+  OrbNode next;
+  OrbNode previous;
+
+  OrbNode(int x, int y) {
+    position = new PVector(x, y);
+    velocity = new PVector(0, 0);
+    acceleration = new PVector(0, 0);
+    osize = PART_SIZE;
+    c = color(240, 140, 40);
+  }//constructor
+
+  boolean contains(PVector p) {
+    float d = position.dist(p);
+    return d <= osize;
+  }//contains
+
+  void embiggen(float factor) {
+    osize+= factor;
+  }//embiggen
+
+  void run() {
+    acceleration.mult(osize/PART_SIZE);
+    velocity.add(acceleration);
+    velocity.mult(DAMPING);
+    position.add(velocity);
+    acceleration.mult(0);
+    if (checkYBounds()) {
+      velocity.y*= -1;
+      position.y+= velocity.y;
     }
+    if (checkXBounds()) {
+      velocity.x*= -1;
+      position.x+= velocity.x;
+    }
+  }//run
+
+  void applyForce(PVector f) {
+    acceleration.add(f);
+  }//applyForce
+
+  boolean checkYBounds() {
+    boolean check = position.y <= osize/2;
+    check = check || position.y >= height - osize/2;
+    return check;
+  }//checkYBounds
+  boolean checkXBounds() {
+    boolean check = position.x <= osize/2;
+    check = check || position.x >= width - osize/2;
+    return check;
+  }//checkXBounds
+
+  void display() {
     if (next != null) {
-      stroke(20, 100, 255);
-      strokeWeight(2);
-      line(pos.x + 5, pos.y + 5, next.getPos().x + 5, next.getPos().y + 5);
+      stroke(40, 200, 190);
+      line(position.x+1, position.y+1, next.position.x+1, next.position.y+1);
     }
-    if (prev != null) {
-      stroke(255, 0, 0);
-      strokeWeight(2);
-      line(pos.x, pos.y, prev.getPos().x, prev.getPos().y);
+    if (previous != null) {
+      stroke(210, 50, 150);
+      line(position.x-1, position.y-1, previous.position.x-1, previous.position.y-1);
     }
-  }
+    stroke(0);
+    fill(c);
+    circle(position.x, position.y, osize);
+  }//display
 
-  public PVector getPos() {
-    return pos;
-  }
+  String toString() {
+    return position.toString();
+  }//toString
 
-  public OrbNode getNext() {
-    return next;
-  }
-
-  public OrbNode getPrev() {
-    return prev;
-  }
-
-  public void setSize(float psize) {
-    this.psize = psize;
-  }
-
-  public void setColor(color c) {
-    orbColor = c;
-  }
-
-  public void drawVector(boolean b) {
-    drawVector = b;
-  }
-
-  public void setNext(OrbNode next) {
-    this.next = next;
-  }
-
-  public void setPrev(OrbNode prev) {
-    this.prev = prev;
-  }
-
-  public void applyForce(PVector f) {
-    nextAccel.add(f);
-  }
-
-  public boolean checkInXBound() {
-    return pos.x >= psize / 2f && pos.x <= width - psize / 2f;
-  }
-
-  public boolean checkInYBound() {
-    return pos.y >= psize / 2f && pos.y <= height - psize / 2f;
-  }
-
-  public void applySpringForce() {
-    if (next != null) this.applyForce(calculateSpringForce(next));
-    if (prev != null) this.applyForce(calculateSpringForce(prev));
-  }
-
-  private PVector calculateSpringForce(OrbNode other) {
-    float displacement = -(pos.dist(other.getPos()) - SPRING_LENGTH);
-    PVector force = new PVector(other.getPos().x - pos.x, other.getPos().y - pos.y);
-    force.setMag(-SPRING_CONST * displacement);
-    return force;
-  }
-
-  public void run() {
-    vel.add(nextAccel);
-    if (!checkInXBound()) {
-      if (pos.x < psize / 2f) pos.x = psize / 2f;
-      if (pos.x > width - psize / 2f) pos.x = width - psize / 2f;
-      vel.x = -vel.x;
+  void applySpringForce() {
+    if (next != null) {
+      velocity.add(calculateSpringForce(next));
     }
-    if (!checkInYBound()) {
-      if (pos.y < psize / 2f) pos.y = psize / 2f;
-      if (pos.y > height - psize / 2f) pos.y = height - psize / 2f;
-      vel.y = -vel.y;
+    if (previous != null) {
+      velocity.add(calculateSpringForce(previous));
     }
-    vel.mult(AIR_DAMPING);
-    pos.add(vel);
-    nextAccel = new PVector(0, 0);
-  }
-}
+  }//applySpringForce
+
+
+  PVector calculateSpringForce(OrbNode other) {
+    float dist = position.dist(other.position);
+    float displacement = dist - SPRING_LEN;
+    float springForce = displacement * SPRING_CONST;
+
+    float xDiff = other.position.x - position.x;
+    float yDiff = other.position.y - position.y;
+    float xForce = springForce * xDiff/dist;
+    float yForce = springForce * yDiff/dist;
+
+    return new PVector(xForce, yForce);
+  }//calculateSpringForce
+}//OrbNode

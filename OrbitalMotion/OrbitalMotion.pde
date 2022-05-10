@@ -1,74 +1,141 @@
-final float GRAVITY = 0.1;
-OrbList orbs;
+/*=====================
+  Driver File
+
+  On startup, a new OrbList will be displayed
+  with 2 sentinel orbs and 2 regular orbs.
+
+  Pressing space will allow the orbs to run,
+  applying gravity and the spring force to
+  each orb.
+
+  Pressing m will cycle through different
+  interactice modes, explained further in
+  keyPressed anad mousePressed. The current
+  mode will be displayed in the lower left corner.
+
+  Clicking the mouse will either add a new
+  orb or modify and existing orb. More details
+  provided in mousePressed.
+  =====================*/
+
+/*=====================
+  Mode constants
+  See keyPressed and mousePressed for
+  intended behavior based on modes.
+  =====================*/
+int DELETE_MODE = 0;
+int GROW_MODE = 1;
+int SHRINK_MODE = 2;
+int ADD_FIXED_MODE = 3;
+int clickMode;
+
+boolean moving;
+OrbList slinky;
+float GRAVITY = 0.2;
 PVector g;
-boolean moving, gravity;
 
+/*=====================
+  setup and draw should be left unmodified.
+  =====================*/
 void setup() {
-  size(800, 400);
-  g = new PVector(0, GRAVITY);
-  println("==========================================================================================");
-  println("SPACE to enable/disable movement, H to apply force, G to toggle gravity, and R to reset");
-  println("==========================================================================================");
-  reset();
-}
-
-void reset() {
+  size(500, 500);
+  clickMode = DELETE_MODE;
   moving = false;
-  gravity = true;
-  int x = width / 2 - 300;
-  int y = 100;
-  orbs = new OrbList();
-  orbs.append(x, y, true);
-  x += OrbNode.SPRING_LENGTH;
-  for (int i = 1; i < 20; i++) {
-    orbs.append(x, y, false);
-    x += OrbNode.SPRING_LENGTH;
-    if(i % 5 == 0){
-      orbs.append(x, y, true);
-      x+= OrbNode.SPRING_LENGTH;
-    }
-  }
-  orbs.append(x, y, true);
-}
-
-
+  g = new PVector(0, GRAVITY);
+  makeSlinky(2, 100);
+}//setup
 void draw() {
   background(255);
-  fill(255);
-  strokeWeight(1);
   if (moving) {
-    runAStep();
+    slinky.applyExternalForce(g);
+    slinky.applySprings();
+    slinky.run();
   }
-  strokeWeight(1);
-  fill(255, 0, 0, 100);
-  orbs.display();
+  slinky.display();
+  displayMode();
+}//draw
 
-  fill(0);
-  text("Movement: " + (moving ? "ENABLED" : "DISABLED"), 10, 20);
-  text("Gravity: " + (gravity ? "ENABLED" : "DISABLED"), 10, 30);
-}
 
-void runAStep() {
-  orbs.applySprings();
-  if (gravity) orbs.applyExternalForce(g);
-  orbs.run();
-}
+/*=====================
+  makeSlinky(int numParts, int y)
 
+  Create a new OrbList with numParts orbs in
+  addition to the 2 sentinel nodes (so if
+  numParts = 2, 4 nodes in total).
+
+  Every node should have the provided y value.
+
+  The 2 sentinel nodes should be at (50, y)
+  and (450, y).
+
+  The rest of the nodes should be regular
+  OrbNodes evely spaced between the two
+  sentinel nodes.
+  =====================*/
+void makeSlinky(int numParts, int y) {
+
+}//makeSlinky
+
+/*=====================
+  keyPressed
+
+  Respond to keyboard events in the following way:
+
+  ' ' (space): set moving to it's opposite value.
+  'r': Call makeSlinky with at least 2 nodes.
+  'm': Cycle through the different clickMode values going
+      DELETE_MODE, GROW_MODE, SHRINK_MODE, ADD_FIXED_MODE,
+      back to DELETE_MODE and so on.
+  =====================*/
 void keyPressed() {
-  if (key == ' ') {
-    moving = !moving;
-  }
 
-  if (key == 'h') {
-    moving = true;
-    orbs.applyExternalForce(new PVector((mouseX - orbs.getPosOrb(orbs.getLength() / 2).x) * 0.01, (mouseY - orbs.getPosOrb(orbs.getLength() / 2).y) * 0.01));
-  }
+}//keyPressed
 
-  if (key == 'g') {
-    gravity = !gravity;
-  }
 
-  if (key == 'r') {
-    reset();
+/*=====================
+  mousePressed
+
+  Respond to mouse pressed based on clickMode:
+
+  First, check if the mouse is currently over an
+  existing orb.
+
+  If the mouse is NOT selecting a current orb,
+  add a new orb to the list with the following
+  constraints.
+    0) If the mouse is on the right half of the
+       screen, add the orb to the end of the list.
+    1) If the mouse is on the left half of the
+       screen, add the orb to the front of the list.
+    2) If clickMode is ADD_FIXED_MODE, then a
+       FixedOrb should be added.
+
+  If the mouse is selecting  a current (non sentinel)
+  orb, perform the following action based on the
+  current value of clickMode.
+    DELETE_MODE: Remove the selected orb from the list.
+    GROW_MODE: Increase the size of the orb by 1.
+    SHRINK_MODE: Decrease the size of the orb by 1.
+  =====================*/
+void mousePressed() {
+
+}//mousePressed
+
+/*=====================
+  displayMode should be left unmodified.
+  =====================*/
+void displayMode() {
+  String message = "DELETE_MODE";
+  if (clickMode == GROW_MODE) {
+    message = "GROW MODE";
   }
+  else if (clickMode == SHRINK_MODE) {
+    message = "SHRINK MODE";
+  }
+  else if (clickMode == ADD_FIXED_MODE) {
+    message = "ADD FIXED MODE";
+  }
+  fill(0);
+  textSize(20);
+  text(message, 10, height-10);
 }
