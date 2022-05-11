@@ -65,7 +65,12 @@ void draw() {
   sentinel nodes.
   =====================*/
 void makeSlinky(int numParts, int y) {
-  OrbList orbs = new Orblist();
+  int x0 = 50;
+  int x1 = 450;
+  slinky = new OrbList(50, y, x1, y);
+  for(int i = 0; i < numParts; i++){
+    slinky.append((x1 - x0) / (numParts - 1) * i + x0, y, false);
+  }
 }
 
 /*=====================
@@ -84,7 +89,7 @@ void keyPressed() {
     moving = !moving;
   }
   if(key == 'r') {
-    makeSlinky(2, mouseY);
+    makeSlinky(int(random()) * 10 + 1, mouseY);
   }
   if(key == 'm') {
     clickMode = (clickMode + 1) % 4;
@@ -100,16 +105,6 @@ void keyPressed() {
   First, check if the mouse is currently over an
   existing orb.
 
-  If the mouse is NOT selecting a current orb,
-  add a new orb to the list with the following
-  constraints.
-    0) If the mouse is on the right half of the
-       screen, add the orb to the end of the list.
-    1) If the mouse is on the left half of the
-       screen, add the orb to the front of the list.
-    2) If clickMode is ADD_FIXED_MODE, then a
-       FixedOrb should be added.
-
   If the mouse is selecting  a current (non sentinel)
   orb, perform the following action based on the
   current value of clickMode.
@@ -118,10 +113,21 @@ void keyPressed() {
     SHRINK_MODE: Decrease the size of the orb by 1.
   =====================*/
 void mousePressed() {
-  if(detectMouse() == -1){ //mouse is not over orb
-    if(mouseX > width/2) {
-      orbs.append(x, y, false);
-    }
+  if(slinky.selectNode(mouseX, mouseY) == null){ //mouse is not over orb
+    //add new orb based on where mouseX is
+    OrbNode nxt = slinky.findNextNode(mouseX);
+    OrbNode prev = nxt.getPrev();
+    OrbNode n;
+    if(clickMode == ADD_FIXED_MODE) n = new FixedOrbNode(mouseX, mouseY);
+    else n = new OrbNode(mouseX, mouseY);
+    nxt.setPrev(n);
+    n.setNext(nxt);
+    n.setPrev(prev);
+    prev.setNext(n);
+  } else {
+    if(clickMode == DELETE_MODE) slinky.removeNode(slinky.selectNode(mouseX, mouseY));
+    else if(clickMode == GROW_MODE) slinky.selectNode(mouseX, mouseY).setSize(slinky.selectNode(mouseX, mouseY).getSize() + 1);
+    else if(clickMode == SHRINK_MODE) slinky.selectNode(mouseX, mouseY).setSize(slinky.selectNode(mouseX, mouseY).getSize() - 1);
   }
 }//mousePressed
 

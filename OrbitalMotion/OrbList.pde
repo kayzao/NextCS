@@ -18,45 +18,34 @@ public class OrbList {
     back.setPrev(front);
   }
 
-  /*=====================
-    addFront(int x, int y, boolean fixed)
-
-    Create a new OrbNode at (x, y), if fixed
-    is true, make that orb a FixedOrd.
-
-    Add the new OrbNode to the front, AFTER
-    the sentinel node (see explanation at the
-    top of this file).
-    =====================*/
   public void addFront(int x, int y, boolean fixed) {
-
+    OrbNode o;
+    if(fixed) o = new FixedOrbNode(x, y);
+    else o = new OrbNode(x, y);
+    OrbNode nxt = front.getNext();
+    nxt.setPrev(o);
+    o.setNext(nxt);
+    o.setPrev(front);
+    front.setNext(o);
   }
 
-  /*=====================
-    append(int x, int y, boolean fixed)
-
-    Create a new OrbNode at (x, y), if fixed
-    is true, make that orb a FixedOrd.
-
-    Add the new OrbNode to the back, BEFORE
-    the sentinel node (see explanation at the
-    top of this file).
-    =====================*/
   public void append(int x, int y, boolean fixed) {
-
+    OrbNode o;
+    if(fixed) o = new FixedOrbNode(x, y);
+    else o = new OrbNode(x, y);
+    OrbNode prv = back.getPrev();
+    prv.setNext(o);
+    o.setPrev(prv);
+    o.setNext(back);
+    back.setPrev(o);
   }
 
-
-  /*=====================
-    removeNode(OrbNode pn)
-
-    Assume that pn is an OrbNode in this list.
-
-    Remove pn from the list by changing the
-    appropriate links.
-    =====================*/
   public void removeNode(OrbNode pn) {
-
+    OrbNode prv = pn.getPrev();
+    OrbNode nxt = pn.getNext();
+    prv.setNext(nxt);
+    nxt.setPrev(prv);
+    prv = null;
   }
 
 
@@ -71,7 +60,21 @@ public class OrbList {
     In all other cases, return null.
     =====================*/
   public OrbNode selectNode(int x, int y) {
+    OrbNode i = front.getNext();
+    while(i != null) {
+      if(i.contains(new PVector(x, y))) return i;
+      i = i.getNext();
+    }
+    return null;
+  }
 
+  OrbNode findNextNode(float x) {
+    OrbNode i = front.getNext();
+    if(x < i.getPos().x) return i;
+    while(i.getNext() != null) {
+      if(i.getPos().x > x) return i;
+      i = i.getNext();
+    }
     return null;
   }
 

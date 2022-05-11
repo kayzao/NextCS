@@ -67,14 +67,14 @@ public class OrbNode {
   public void setColor(color c){
     color = c;
   }
+  
+  public void setSize(float size) {
+    osize = size;
+  }
 
   public boolean contains(PVector p) {
     float d = position.dist(p);
     return d <= osize;
-  }
-
-  public void embiggen(float factor) {
-    osize += factor;
   }
 
   public void run() {
