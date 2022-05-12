@@ -41,7 +41,7 @@ public class OrbNode {
   }
 
   public OrbNode getPrev(){
-    return prev;
+    return previous;
   }
   
   public OrbNode getNext(){
@@ -56,8 +56,8 @@ public class OrbNode {
     return osize;
   }
 
-  public void setPrev(OrbNode prev){
-    this.prev = prev;
+  public void setPrev(OrbNode previous){
+    this.previous = previous;
   }
 
   public void setNext(OrbNode next){
@@ -65,10 +65,10 @@ public class OrbNode {
   }
 
   public void setColor(color c){
-    color = c;
+    this.c = c;
   }
   
-  public void setSize(float size) {
+  public void setSize(int size) {
     osize = size;
   }
 

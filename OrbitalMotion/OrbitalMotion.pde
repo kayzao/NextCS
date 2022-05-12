@@ -41,8 +41,20 @@ void draw() {
   background(255);
   if (moving) {
     slinky.applyExternalForce(g);
+    /*
+    println(slinky);
+    println("========= applied external force =========");
+    */
     slinky.applySprings();
+    /*
+    println(slinky);
+    println("========= applied spring =========");
+    */
     slinky.run();
+    /*
+    println(slinky);
+    println("========= RUN() =========");
+    */
   }
   slinky.display();
   displayMode();
@@ -69,7 +81,7 @@ void makeSlinky(int numParts, int y) {
   int x1 = 450;
   slinky = new OrbList(50, y, x1, y);
   for(int i = 0; i < numParts; i++){
-    slinky.append((x1 - x0) / (numParts - 1) * i + x0, y, false);
+    slinky.append(x0 + ((x1 - x0) / (numParts + 1)) * (i+1), y, false);
   }
 }
 
@@ -89,10 +101,13 @@ void keyPressed() {
     moving = !moving;
   }
   if(key == 'r') {
-    makeSlinky(int(random()) * 10 + 1, mouseY);
+    makeSlinky(5, mouseY);
   }
   if(key == 'm') {
     clickMode = (clickMode + 1) % 4;
+  }
+  if(key == 'k') {
+    println(slinky);
   }
 }
 

@@ -18,6 +18,14 @@ public class OrbList {
     back.setPrev(front);
   }
 
+  public OrbNode getFront() {
+    return front;
+  }
+
+  public OrbNode getBack() {
+    return back;
+  }
+
   public void addFront(int x, int y, boolean fixed) {
     OrbNode o;
     if(fixed) o = new FixedOrbNode(x, y);
@@ -41,11 +49,11 @@ public class OrbList {
   }
 
   public void removeNode(OrbNode pn) {
+    if(pn == front || pn == back) return;
     OrbNode prv = pn.getPrev();
     OrbNode nxt = pn.getNext();
     prv.setNext(nxt);
     nxt.setPrev(prv);
-    prv = null;
   }
 
 
@@ -67,15 +75,17 @@ public class OrbList {
     }
     return null;
   }
+  
 
+  //finds the leftmost node right of the given x pos
   OrbNode findNextNode(float x) {
     OrbNode i = front.getNext();
     if(x < i.getPos().x) return i;
-    while(i.getNext() != null) {
+    while(i != null) {
       if(i.getPos().x > x) return i;
       i = i.getNext();
     }
-    return null;
+    return back;
   }
 
   public void display() {
@@ -117,7 +127,7 @@ public class OrbList {
 
   public void run() {
     OrbNode current = front;
-    while (current != null) {
+    while (current.getNext() != null) {
       current.run();
       current = current.next;
     }
