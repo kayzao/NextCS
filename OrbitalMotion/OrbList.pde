@@ -49,7 +49,7 @@ public class OrbList {
   }
 
   public void removeNode(OrbNode pn) {
-    if(pn == front || pn == back) return;
+    if(pn.getPrev() == null || pn.getNext() == null) return;
     OrbNode prv = pn.getPrev();
     OrbNode nxt = pn.getNext();
     prv.setNext(nxt);
@@ -68,7 +68,7 @@ public class OrbList {
     In all other cases, return null.
     =====================*/
   public OrbNode selectNode(int x, int y) {
-    OrbNode i = front.getNext();
+    OrbNode i = front;
     while(i != null) {
       if(i.contains(new PVector(x, y))) return i;
       i = i.getNext();
@@ -82,7 +82,7 @@ public class OrbList {
     OrbNode i = front.getNext();
     if(x < i.getPos().x) return i;
     while(i != null) {
-      if(i.getPos().x > x) return i;
+      if(i.getPos().x >= x) return i;
       i = i.getNext();
     }
     return back;

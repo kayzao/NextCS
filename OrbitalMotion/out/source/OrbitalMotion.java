@@ -118,7 +118,7 @@ PVector g;
     moving = !moving;
   }
   if(key == 'r') {
-    makeSlinky(5, mouseY);
+    makeSlinky(3, mouseY);
   }
   if(key == 'm') {
     clickMode = (clickMode + 1) % 4;
@@ -242,7 +242,7 @@ public class OrbList {
   }
 
   public void removeNode(OrbNode pn) {
-    if(pn == front || pn == back) return;
+    if(pn.getPrev() == null || pn.getNext() == null) return;
     OrbNode prv = pn.getPrev();
     OrbNode nxt = pn.getNext();
     prv.setNext(nxt);
@@ -261,7 +261,7 @@ public class OrbList {
     In all other cases, return null.
     =====================*/
   public OrbNode selectNode(int x, int y) {
-    OrbNode i = front.getNext();
+    OrbNode i = front;
     while(i != null) {
       if(i.contains(new PVector(x, y))) return i;
       i = i.getNext();
@@ -275,7 +275,7 @@ public class OrbList {
     OrbNode i = front.getNext();
     if(x < i.getPos().x) return i;
     while(i != null) {
-      if(i.getPos().x > x) return i;
+      if(i.getPos().x >= x) return i;
       i = i.getNext();
     }
     return back;
@@ -423,11 +423,15 @@ public class OrbNode {
     position.add(velocity);
     acceleration.mult(0);
     if (checkYBounds()) {
-      velocity.y*= -1;
+      if(position.y < osize/2) position.y = osize/2;
+      else if(position.y > height - osize/2) position.y = height - osize/2;
+      velocity.y*= -0.9f;
       position.y+= velocity.y;
     }
     if (checkXBounds()) {
-      velocity.x*= -1;
+      if(position.x < osize/2) position.x = osize/2;
+      else if(position.x > width - osize/2) position.x = width - osize/2;
+      velocity.x*= -0.9f;
       position.x+= velocity.x;
     }
   }

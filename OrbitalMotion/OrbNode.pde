@@ -84,11 +84,15 @@ public class OrbNode {
     position.add(velocity);
     acceleration.mult(0);
     if (checkYBounds()) {
-      velocity.y*= -1;
+      if(position.y < osize/2) position.y = osize/2;
+      else if(position.y > height - osize/2) position.y = height - osize/2;
+      velocity.y*= -0.9;
       position.y+= velocity.y;
     }
     if (checkXBounds()) {
-      velocity.x*= -1;
+      if(position.x < osize/2) position.x = osize/2;
+      else if(position.x > width - osize/2) position.x = width - osize/2;
+      velocity.x*= -0.9;
       position.x+= velocity.x;
     }
   }
