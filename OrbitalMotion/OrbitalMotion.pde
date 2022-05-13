@@ -101,7 +101,7 @@ void keyPressed() {
     moving = !moving;
   }
   if(key == 'r') {
-    makeSlinky(3, mouseY);
+    makeSlinky(0, mouseY);
   }
   if(key == 'm') {
     clickMode = (clickMode + 1) % 4;
