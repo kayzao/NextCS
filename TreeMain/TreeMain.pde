@@ -7,11 +7,11 @@ void setup(){
   b = new TreeNode(width / 2 + 50, 75, "b");
   c = new TreeNode(width / 2 - 100, 125, "c");
   d = new TreeNode(width / 2 + 100, 125, "d");
+
   root.left = a;
   root.right = b;
   a.left = c;
   b.right = d;
-  
 }
 
 void draw(){
