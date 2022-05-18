@@ -15,38 +15,40 @@ import java.io.IOException;
 
 public class TreeMain extends PApplet {
 
-TreeNode root;
+Tree fir;
 
- public void setup(){
+ public void setup() {
   /* size commented out by preprocessor */;
-  root = new TreeNode(width / 2, 25);
-  root = growTree(4, PApplet.parseInt(root.getPos().x), PApplet.parseInt(root.getPos().y));
-}
 
- public void draw(){
-  recursiveDisplay(root);
+  fir = new Tree(250, 20, 4);
+  fir.display();
 }
+class Tree{
+  private TreeNode root;
+  private int totalLevels;
 
- public void recursiveDisplay(TreeNode t){
-  if(t == null) return;
-  t.display();
-  recursiveDisplay(t.getLeft());
-  recursiveDisplay(t.getRight());
-}
+  public Tree(int x, int y, int numLevels){
+    totalLevels = numLevels;
+    root = makeTree(x, y, numLevels);
+  }
 
- public TreeNode growTree(int levels, int x, int y){
-  if(levels <= 0) return null;
-  TreeNode root = new TreeNode(x, y);
-  TreeNode left = growTree(levels - 1, x - 20 * levels, y + 50);
-  TreeNode right = growTree(levels - 1, x + 20 * levels, y + 50);
-  root.setLeft(left);
-  root.setRight(right);
-  return root;
-}
+  public TreeNode makeTree(int x, int y, int numLevels){
+    if(numLevels <= 0) return null;
+    TreeNode root = new TreeNode(x, y);
+    root.setLeft(makeTree(x - 20 * numLevels, y + 20 * numLevels, numLevels - 1));
+    root.setRight(makeTree(x + 20 * numLevels, y + 20 * numLevels, numLevels - 1));
+    return root;
+  }
 
- public void keyPressed(){
-  if(key == ' '){
-    println(root.getPos());
+  public void display(){
+    recursiveDisplay(root);
+  }
+
+  private void recursiveDisplay(TreeNode root){
+    if(root == null) return;
+    root.display();
+    recursiveDisplay(root.getLeft());
+    recursiveDisplay(root.getRight());
   }
 }
 class TreeNode {
@@ -105,7 +107,7 @@ class TreeNode {
 }
 
 
-  public void settings() { size(400, 400); }
+  public void settings() { size(800, 500); }
 
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "TreeMain" };
