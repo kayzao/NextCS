@@ -1,37 +1,53 @@
-color col_red = color(240,0,0);
-color col_green = color(50,250,50);
-
 class TreeNode {
-  PVector pos;
-  float psize; //diameter
-  color fillCol = color(255);
-  String name;
+  private PVector pos;
+  private float psize; //diameter
+  private color fillCol = color(255);
+  private final color col_left = color(240,0,0);
+  private final color col_right = color(50,250,50);
+  private String name;
+  private TreeNode left, right;
   
-  TreeNode left, right;
-  
-  TreeNode(int x, int y, String name) {
+  public TreeNode(int x, int y) {
     pos = new PVector(x,y);
     psize = 20;
-    this.name = name;
+  }
+
+  public PVector getPos(){
+    return pos;
+  }
+
+  public TreeNode getLeft(){
+    return left;
+  }
+
+  public TreeNode getRight(){
+    return right;
+  }
+
+  public void setLeft(TreeNode left){
+    this.left = left;
+  }
+
+  public void setRight(TreeNode right){
+    this.right = right;
+  }
+
+  public void setPos(PVector pos){
+    this.pos = pos;
   }
  
-  void display() {
+  public void display() {
     stroke(0);
     fill(fillCol);
     circle(pos.x, pos.y, psize);
-    
-    fill(0);
-    textAlign(CENTER);
-    text(name, pos.x, pos.y);
-    
     //draw lines to left and right
     float OFFSET = 3;
     if (left != null) {
-      stroke(col_red);
+      stroke(col_left);
       line(pos.x - OFFSET, pos.y - 0, left.pos.x - OFFSET, left.pos.y - 0);
     }
     if (right != null) {
-      stroke(col_green);
+      stroke(col_right);
       line(pos.x + OFFSET, pos.y + 0, right.pos.x + OFFSET, right.pos.y + 0);
     }
   }
