@@ -16,12 +16,39 @@ import java.io.IOException;
 public class TreeMain extends PApplet {
 
 Tree fir;
+int state = 0;
 
  public void setup() {
   /* size commented out by preprocessor */;
+  fir = new Tree(width / 2, 20, 5);
+}
 
-  fir = new Tree(width / 2, 20, 10);
-  fir.display();
+ public void draw(){
+  background(200);
+  String str;
+  if(state == 0) {
+    fir.inOrderDisplay();
+    str = "inOrderDisplay";
+  } else if(state == 1){
+    fir.postOrderDisplay();
+    str = "postOrderDisplay";
+  } else {
+    fir.preOrderDisplay();
+    str = "preOrderDisplay";
+  }
+  fill(0);
+  textSize(30);
+  text(str, 100, 20);
+}
+
+ public void mouseReleased() {
+  state = (state + 1) % 3;
+}
+
+ public void keyPressed(){
+  if(key == ' '){
+    println(fir.preOrder(fir.getRoot()));
+  }
 }
 class Tree{
   private TreeNode root;
@@ -35,20 +62,53 @@ class Tree{
   public TreeNode makeTree(int x, int y, int numLevels){
     if(numLevels <= 0) return null;
     TreeNode root = new TreeNode(x, y);
-    root.setLeft(makeTree(x - PApplet.parseInt(width / (pow(2, (totalLevels - numLevels) +2))), min(y + 20 * numLevels, y+50), numLevels - 1));
-    root.setRight(makeTree(x + PApplet.parseInt(width / (pow(2, (totalLevels - numLevels) +2))), min(y + 20 * numLevels, y+50), numLevels - 1));
+    TreeNode left = makeTree(x - PApplet.parseInt(width / (pow(2, (totalLevels - numLevels) +2))), min(y + 20 * numLevels, y+50), numLevels - 1);
+    TreeNode right = makeTree(x + PApplet.parseInt(width / (pow(2, (totalLevels - numLevels) +2))), min(y + 20 * numLevels, y+50), numLevels - 1);
+    root.setChar((PApplet.parseChar(PApplet.parseInt(random(1) * 26) + 97)));
+    root.setLeft(left);
+    root.setRight(right);
+    return root;
+  }
+  private TreeNode getRoot(){
     return root;
   }
 
-  public void display(){
-    recursiveDisplay(root);
+  public String preOrder(TreeNode tn){
+    if(tn == null) return "";
+    return tn.c + preOrder(tn.getRight()) + preOrder(tn.getLeft());
   }
 
-  private void recursiveDisplay(TreeNode root){
+  public void inOrderDisplay(){
+    inOrderDisplay(root);
+  }
+
+  private void inOrderDisplay(TreeNode root){
+    if(root == null) return;
+    inOrderDisplay(root.getLeft());
+    root.display();
+    inOrderDisplay(root.getRight());
+  }
+
+  public void postOrderDisplay(){
+    postOrderDisplay(root);
+  }
+  
+  private void postOrderDisplay(TreeNode root){
+    if(root == null) return;
+    postOrderDisplay(root.getLeft());
+    postOrderDisplay(root.getRight());
+    root.display();
+  }
+
+  public void preOrderDisplay(){
+    preOrderDisplay(root);
+  }
+
+  private void preOrderDisplay(TreeNode root){
     if(root == null) return;
     root.display();
-    recursiveDisplay(root.getLeft());
-    recursiveDisplay(root.getRight());
+    preOrderDisplay(root.getLeft());
+    preOrderDisplay(root.getRight());
   }
 }
 class TreeNode {
@@ -59,10 +119,12 @@ class TreeNode {
   private final int col_right = color(50,250,50);
   private String name;
   private TreeNode left, right;
+  private char c;
   
   public TreeNode(int x, int y) {
     pos = new PVector(x,y);
     psize = 20;
+    c = PApplet.parseChar(PApplet.parseInt(random(1) * 26) + 97);
   }
 
   public PVector getPos(){
@@ -75,6 +137,14 @@ class TreeNode {
 
   public TreeNode getRight(){
     return right;
+  }
+
+  public char getChar(){
+    return c;
+  }
+
+  public void setChar(char c){
+    this.c = c;
   }
 
   public void setLeft(TreeNode left){
@@ -103,7 +173,14 @@ class TreeNode {
       stroke(col_right);
       line(pos.x + OFFSET, pos.y + 0, right.pos.x + OFFSET, right.pos.y + 0);
     }
+
+    textAlign(CENTER);
+    textSize(15);
+    fill(0);
+    text(c, pos.x, pos.y + psize / 3);
   }
+
+
 }
 
 
