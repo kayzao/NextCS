@@ -10,8 +10,8 @@ class Tree{
   public TreeNode makeTree(int x, int y, int numLevels){
     if(numLevels <= 0) return null;
     TreeNode root = new TreeNode(x, y);
-    root.setLeft(makeTree(x - 20 * numLevels, y + 20 * numLevels, numLevels - 1));
-    root.setRight(makeTree(x + 20 * numLevels, y + 20 * numLevels, numLevels - 1));
+    root.setLeft(makeTree(x - int(width / (pow(2, (totalLevels - numLevels) +2))), min(y + 20 * numLevels, y+50), numLevels - 1));
+    root.setRight(makeTree(x + int(width / (pow(2, (totalLevels - numLevels) +2))), min(y + 20 * numLevels, y+50), numLevels - 1));
     return root;
   }
 
