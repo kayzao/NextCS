@@ -34,6 +34,10 @@ class TreeNode {
     this.c = c;
   }
 
+  public void setColor(color col){
+    fillCol = col;
+  }
+
   public void setLeft(TreeNode left){
     this.left = left;
   }
