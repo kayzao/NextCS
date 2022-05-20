@@ -4,6 +4,13 @@ int state = 0;
 void setup() {
   size(800, 500);
   fir = new Tree(width / 2, 20, 5, true);
+  println("SPACE to print nodes in preorder, inorder, and postorder form");
+  println("R to reset");
+  println("N to print number of nodes");
+  println("H to print height of tree");
+  println("C to color nodes based on height");
+  println("=====================================");
+
 }
 
 void draw(){
